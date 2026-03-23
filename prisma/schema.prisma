@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+enum Role {
+  ADMIN
+  DOSEN
+  GKM
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  password      String    
+  role          Role      @default(ADMIN)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  dosenProfile  DosenProfile?
+}
+
+model DosenProfile {
+  id            String    @id @default(cuid())
+  userId        String    @unique
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  nidn          String?   @unique
+  fotoUrl       String?
+  kompetensi    String[]
+  
+  sertifikat    Sertifikat[]
+  publikasi     Publikasi[]
+  penelitian    Penelitian[]
+  pengabdian    Pengabdian[]
+}
+
+model Sertifikat {
+  id              String       @id @default(cuid())
+  dosenProfileId  String
+  dosenProfile    DosenProfile @relation(fields: [dosenProfileId], references: [id], onDelete: Cascade)
+  namaPelatihan   String
+  tahun           Int
+  dokumenUrl      String?
+}
+
+model Publikasi {
+  id              String       @id @default(cuid())
+  dosenProfileId  String
+  dosenProfile    DosenProfile @relation(fields: [dosenProfileId], references: [id], onDelete: Cascade)
+  judul           String
+  tahun           Int
+  abstrak         String?      @db.Text
+  lokasi          String?
+  url             String?
+}
+
+model Penelitian {
+  id              String       @id @default(cuid())
+  dosenProfileId  String
+  dosenProfile    DosenProfile @relation(fields: [dosenProfileId], references: [id], onDelete: Cascade)
+  judul           String
+  tahun           Int
+  gambarUrl       String?
+}
+
+model Pengabdian {
+  id              String       @id @default(cuid())
+  dosenProfileId  String
+  dosenProfile    DosenProfile @relation(fields: [dosenProfileId], references: [id], onDelete: Cascade)
+  judul           String
+  tahun           Int
+  gambarUrl       String?      
+}
+
+model LaporanGkm {
+  id              String   @id @default(cuid())
+  judul           String
+  semester        String
+  dokumenUrl      String
+  dokumentasiUrls String[]
+  createdAt       DateTime @default(now())
+}
+
+model Kurikulum {
+  id          String       @id @default(cuid())
+  nama        String
+  tahunMulai  Int
+  dokumenUrl  String?
+  aktif       Boolean      @default(false)
+  deskripsi   String?      @db.Text
+  mataKuliah  MataKuliah[] 
+  
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model MataKuliah {
+  id            String    @id @default(cuid())
+  kurikulumId   String?
+  kurikulum     Kurikulum? @relation(fields: [kurikulumId], references: [id])
+  
+  kodeMk        String
+  nama          String
+  sks           Int
+  semester      Int
+  jenis         String?
+  deskripsi     String?   @db.Text
+  
+  @@unique([kurikulumId, kodeMk]) 
+}
+
+model Aktifitas {
+  id            String   @id @default(cuid())
+  nama          String
+  deskripsi     String   @db.Text
+  gambarUrls    String[]
+  tanggal       DateTime?
+}
+
+model Fasilitas {
+  id            String   @id @default(cuid())
+  nama          String
+  deskripsi     String   @db.Text
+  gambarUrls    String[]
+}
+
+model StatistikMahasiswa {
+  id            String   @id @default(cuid())
+  tahun         Int      @unique
+  pendaftar     Int
+  diterima      Int
+  lulusan       Int
+}
