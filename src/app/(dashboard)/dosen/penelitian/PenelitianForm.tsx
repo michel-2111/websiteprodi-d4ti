@@ -9,27 +9,24 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { X } from "lucide-react";
 
-// Tipe data untuk daftar dosen yang di-passing dari halaman utama
 type Dosen = {
-    id: string; // ID DosenProfile
+    id: string;
     user: { name: string | null };
 };
 
 export default function PenelitianForm({ dosenList }: { dosenList: Dosen[] }) {
     const formRef = useRef<HTMLFormElement>(null);
     
-    // State untuk menampung ID anggota terpilih
     const [selectedAnggota, setSelectedAnggota] = useState<string[]>([]);
 
     const handleSubmit = async (formData: FormData) => {
-        // Sisipkan data array anggota ke dalam formData sebelum dikirim ke server
         selectedAnggota.forEach(id => {
             formData.append("anggotaIds", id);
         });
 
         const promise = createPenelitian(formData).then(() => {
             formRef.current?.reset();
-            setSelectedAnggota([]); // Kosongkan anggota setelah berhasil
+            setSelectedAnggota([]);
         });
 
         toast.promise(promise, {
@@ -39,16 +36,14 @@ export default function PenelitianForm({ dosenList }: { dosenList: Dosen[] }) {
         });
     };
 
-    // Fungsi saat dropdown dipilih
     const handleSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
         const val = e.target.value;
         if (val && !selectedAnggota.includes(val)) {
             setSelectedAnggota([...selectedAnggota, val]);
         }
-        e.target.value = ""; // Kembalikan dropdown ke posisi default
+        e.target.value = "";
     };
 
-    // Fungsi untuk menghapus anggota dari pilihan
     const removeAnggota = (idToRemove: string) => {
         setSelectedAnggota(selectedAnggota.filter(id => id !== idToRemove));
     };
@@ -68,7 +63,6 @@ export default function PenelitianForm({ dosenList }: { dosenList: Dosen[] }) {
                 />
             </div>
 
-            {/* ---> BARU: Input Deskripsi <--- */}
             <div className="space-y-2">
                 <Label htmlFor="deskripsi">Deskripsi Singkat (Abstrak)</Label>
                 <Textarea 
@@ -90,13 +84,11 @@ export default function PenelitianForm({ dosenList }: { dosenList: Dosen[] }) {
                     className="flex h-9 w-full rounded-md border border-zinc-300 bg-white px-3 py-1 text-sm ring-offset-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
                 >
                     <option value="">-- Cari & Tambahkan Anggota --</option>
-                    {/* Hanya tampilkan dosen yang belum dipilih */}
                     {dosenList.filter(d => !selectedAnggota.includes(d.id)).map(d => (
                         <option key={d.id} value={d.id}>{d.user.name}</option>
                     ))}
                 </select>
 
-                {/* Tampilan Badge (Pill) untuk Anggota Terpilih */}
                 {selectedAnggota.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-zinc-200">
                         {selectedAnggota.map(id => {

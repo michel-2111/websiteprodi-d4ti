@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { Users, BookOpen, LinkIcon, Briefcase } from "lucide-react"; // Tambahkan icon Briefcase
+import { Users, BookOpen, LinkIcon, Briefcase } from "lucide-react";
 import Link from "next/link";
 import ScrollAnimate from "@/src/components/ScrollAnimate";
 
@@ -7,7 +7,6 @@ const prisma = new PrismaClient();
 
 export const revalidate = 60;
 
-// Fungsi pembantu untuk memformat jabatan fungsional agar rapi (cth: "LEKTOR_KEPALA" -> "Lektor Kepala")
 function formatJabatan(jabatan: string | null) {
     if (!jabatan) return "Belum Ada Jabatan";
     return jabatan
@@ -46,7 +45,6 @@ export default async function DosenPublikPage() {
 
     return (
         <div className="min-h-screen bg-zinc-50 pb-24">
-            {/* Header (Styling Utuh) */}
             <div className="relative bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 overflow-hidden">
                 <div className="absolute inset-0 dot-pattern opacity-30" />
                 <div className="absolute top-10 right-10 w-64 h-64 bg-blue-500/15 rounded-full blur-3xl" />
@@ -59,7 +57,6 @@ export default async function DosenPublikPage() {
                         Mengenal lebih dekat para pakar, praktisi, dan akademisi di balik Program Studi D4 Teknik Informatika.
                     </p>
                 </div>
-                {/* Wave (Styling Utuh) */}
                 <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" className="w-full h-10 md:h-14">
                     <path d="M0 30L48 26C96 22 192 14 288 18C384 22 480 38 576 42C672 46 768 38 864 30C960 22 1056 14 1152 18C1248 22 1344 38 1392 46L1440 54V60H0V30Z" fill="#fafafa" />
                 </svg>
@@ -69,12 +66,11 @@ export default async function DosenPublikPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {dosenList.map((dosen, index) => {
                         const profil = dosen.dosenProfile!;
-                        // Hitung total seluruh karya dari semua peran
-                        const totalKarya = profil._count.publikasi + 
-                                           profil._count.penelitianKetua + profil._count.penelitianAnggota + 
-                                           profil._count.pengabdianKetua + profil._count.pengabdianAnggota +
-                                           profil._count.bukuAjarKetua + profil._count.bukuAjarAnggota +
-                                           profil._count.hkiKetua + profil._count.hkiAnggota;
+                            const totalKarya = profil._count.publikasi + 
+                                            profil._count.penelitianKetua + profil._count.penelitianAnggota + 
+                                            profil._count.pengabdianKetua + profil._count.pengabdianAnggota +
+                                            profil._count.bukuAjarKetua + profil._count.bukuAjarAnggota +
+                                            profil._count.hkiKetua + profil._count.hkiAnggota;
 
                         return (
                             <ScrollAnimate key={dosen.id} delay={index < 8 ? index * 80 : 0}>

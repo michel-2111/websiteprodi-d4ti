@@ -12,13 +12,27 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 const prisma = new PrismaClient();
 export const revalidate = 60;
 
-// Fungsi pembantu untuk merapikan teks Enum
 function formatEnum(text: string | null | undefined) {
     if (!text) return null;
     return text.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
 }
 
-// Fungsi untuk menggabungkan data Ketua & Anggota, lalu mengurutkan berdasarkan tahun
+function formatPangkat(pangkat: string | null) {
+    if (!pangkat) return null;
+    const pangkatMap: Record<string, string> = {
+        "PENATA_MUDA_IIIA": "Penata Muda (III/a)",
+        "PENATA_MUDA_TK_I_IIIB": "Penata Muda Tk. I (III/b)",
+        "PENATA_IIIC": "Penata (III/c)",
+        "PENATA_TK_I_IIID": "Penata Tk. I (III/d)",
+        "PEMBINA_IVA": "Pembina (IV/a)",
+        "PEMBINA_TK_I_IVB": "Pembina Tk. I (IV/b)",
+        "PEMBINA_UTAMA_MUDA_IVC": "Pembina Utama Muda (IV/c)",
+        "PEMBINA_UTAMA_MADYA_IVD": "Pembina Utama Madya (IV/d)",
+        "PEMBINA_UTAMA_IVE": "Pembina Utama (IV/e)"
+    };
+    return pangkatMap[pangkat] || pangkat; 
+}
+
 function gabungDanUrutkanKarya(karyaKetua: any[], karyaAnggota: any[]) {
     const sebagaiKetua = karyaKetua.map(item => ({ ...item, peran: "Ketua" }));
     const sebagaiAnggota = karyaAnggota.map(item => ({ ...item, peran: "Anggota" }));
@@ -78,7 +92,6 @@ export default async function DosenDetailPage({ params }: { params: Promise<{ id
                     </Link>
 
                     <div className="flex flex-col md:flex-row gap-8 items-start">
-                        {/* Area Foto */}
                         <div className="w-40 h-40 md:w-48 md:h-48 shrink-0 rounded-2xl overflow-hidden border-4 border-white shadow-lg bg-zinc-100 relative">
                             {profil.fotoUrl ? (
                                 <img src={profil.fotoUrl} alt={dosen.name || ""} className="w-full h-full object-cover" />
@@ -105,7 +118,7 @@ export default async function DosenDetailPage({ params }: { params: Promise<{ id
                                 {profil.pangkat && (
                                     <span className="text-emerald-700 font-medium flex items-center bg-emerald-50 px-2.5 py-1 rounded-md text-sm border border-emerald-100">
                                         <Shield className="h-3.5 w-3.5 mr-1.5" />
-                                        {formatEnum(profil.pangkat)}
+                                        {formatPangkat(profil.pangkat)}
                                     </span>
                                 )}
                             </div>

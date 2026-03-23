@@ -26,17 +26,16 @@ export default async function DosenPenelitianPage() {
         orderBy: { user: { name: 'asc' } }
     });
 
-    // ---> UPDATE: Tarik data jika ia KETUA ATAU ANGGOTA <---
     const penelitianList = profil ? await prisma.penelitian.findMany({
         where: {
             OR: [
-                { ketuaId: profil.id }, // Sebagai Ketua
-                { anggota: { some: { id: profil.id } } } // Atau sebagai Anggota
+                { ketuaId: profil.id },
+                { anggota: { some: { id: profil.id } } }
             ]
         },
         include: { 
-            ketua: { include: { user: true } }, // Tarik data ketua
-            anggota: { include: { user: true } } // Tarik data anggota
+            ketua: { include: { user: true } },
+            anggota: { include: { user: true } }
         },
         orderBy: { tahun: 'desc' }
     }) : [];
@@ -106,7 +105,6 @@ export default async function DosenPenelitianPage() {
                                             </div>
                                         </TableCell>
                                         <TableCell className="text-right align-top pt-4">
-                                            {/* ---> UPDATE: Hanya ketua yang boleh melihat tombol Hapus <--- */}
                                             {isKetua ? (
                                                 <form action={deletePenelitian.bind(null, item.id)}>
                                                     <Button variant="ghost" size="sm" type="submit" className="text-red-600 hover:text-red-700 hover:bg-red-50">

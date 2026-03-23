@@ -26,7 +26,6 @@ export default async function BukuAjarPage() {
         orderBy: { user: { name: 'asc' } }
     });
 
-    // Tarik data Buku di mana dosen ini menjadi Penulis Utama atau Anggota
     const bukuList = profil ? await prisma.bukuAjar.findMany({
         where: {
             OR: [

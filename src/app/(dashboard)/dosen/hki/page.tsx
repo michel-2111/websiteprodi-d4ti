@@ -38,7 +38,7 @@ export default async function HkiPage() {
             ketua: { include: { user: true } },
             anggota: { include: { user: true } } 
         },
-        orderBy: { id: 'desc' } // Karena tahun opsional, urutkan dari yang terbaru ditambahkan
+        orderBy: { id: 'desc' }
     }) : [];
 
     return (
