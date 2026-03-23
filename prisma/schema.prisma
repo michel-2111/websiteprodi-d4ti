@@ -7,10 +7,31 @@ datasource db {
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
+
 enum Role {
   ADMIN
   DOSEN
   GKM
+}
+
+enum Pangkat {
+  PENATA_MUDA_IIIA
+  PENATA_MUDA_TK_I_IIIB
+  PENATA_IIIC
+  PENATA_TK_I_IIID
+  PEMBINA_IVA
+  PEMBINA_TK_I_IVB
+  PEMBINA_UTAMA_MUDA_IVC
+  PEMBINA_UTAMA_MADYA_IVD
+  PEMBINA_UTAMA_IVE
+}
+
+enum JabatanFungsional {
+  TENAGA_PENGAJAR
+  ASISTEN_AHLI
+  LEKTOR
+  LEKTOR_KEPALA
+  GURU_BESAR
 }
 
 model User {
@@ -26,17 +47,32 @@ model User {
 }
 
 model DosenProfile {
-  id            String    @id @default(cuid())
-  userId        String    @unique
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  nidn          String?   @unique
-  fotoUrl       String?
-  kompetensi    String[]
+  id                String    @id @default(cuid())
+  userId            String    @unique
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  nidn              String?   @unique
+  fotoUrl           String?
+  kompetensi        String[]
   
-  sertifikat    Sertifikat[]
-  publikasi     Publikasi[]
-  penelitian    Penelitian[]
-  pengabdian    Pengabdian[]
+  telepon           String?
+  email             String?
+  pangkat           Pangkat?
+  jabatanFungsional JabatanFungsional?
+  
+  sertifikat        Sertifikat[]
+  publikasi         Publikasi[]
+
+  penelitianKetua   Penelitian[] @relation("PenelitianKetua")
+  penelitianAnggota Penelitian[] @relation("PenelitianAnggota")
+
+  pengabdianKetua   Pengabdian[] @relation("PengabdianKetua")
+  pengabdianAnggota Pengabdian[] @relation("PengabdianAnggota")
+
+  bukuAjarKetua     BukuAjar[]   @relation("BukuAjarKetua")
+  bukuAjarAnggota   BukuAjar[]   @relation("BukuAjarAnggota")
+
+  hkiKetua          Hki[]        @relation("HkiKetua")
+  hkiAnggota        Hki[]        @relation("HkiAnggota")
 }
 
 model Sertifikat {
@@ -60,21 +96,51 @@ model Publikasi {
 }
 
 model Penelitian {
-  id              String       @id @default(cuid())
-  dosenProfileId  String
-  dosenProfile    DosenProfile @relation(fields: [dosenProfileId], references: [id], onDelete: Cascade)
+  id              String         @id @default(cuid())
   judul           String
   tahun           Int
-  gambarUrl       String?
+  gambarUrls      String[]
+  deskripsi       String?        @db.Text
+  
+  ketuaId         String
+  ketua           DosenProfile   @relation("PenelitianKetua", fields: [ketuaId], references: [id], onDelete: Cascade)
+  anggota         DosenProfile[] @relation("PenelitianAnggota")
 }
 
 model Pengabdian {
-  id              String       @id @default(cuid())
-  dosenProfileId  String
-  dosenProfile    DosenProfile @relation(fields: [dosenProfileId], references: [id], onDelete: Cascade)
+  id              String         @id @default(cuid())
   judul           String
   tahun           Int
-  gambarUrl       String?      
+  gambarUrls      String[]
+  deskripsi       String?        @db.Text
+  
+  ketuaId         String
+  ketua           DosenProfile   @relation("PengabdianKetua", fields: [ketuaId], references: [id], onDelete: Cascade)
+  anggota         DosenProfile[] @relation("PengabdianAnggota")
+}
+
+model BukuAjar {
+  id              String         @id @default(cuid())
+  judul           String
+  tahun           Int
+  deskripsi       String?        @db.Text
+  link            String?
+
+  ketuaId         String
+  ketua           DosenProfile   @relation("BukuAjarKetua", fields: [ketuaId], references: [id], onDelete: Cascade)
+  anggota         DosenProfile[] @relation("BukuAjarAnggota")
+}
+
+model Hki {
+  id              String         @id @default(cuid())
+  kategori        String         // Contoh: "Paten", "Hak Cipta", "Desain Industri"
+  judul           String
+  tahun           Int?
+  link            String?
+
+  ketuaId         String
+  ketua           DosenProfile   @relation("HkiKetua", fields: [ketuaId], references: [id], onDelete: Cascade)
+  anggota         DosenProfile[] @relation("HkiAnggota")
 }
 
 model LaporanGkm {
@@ -100,39 +166,39 @@ model Kurikulum {
 }
 
 model MataKuliah {
-  id            String    @id @default(cuid())
-  kurikulumId   String?
-  kurikulum     Kurikulum? @relation(fields: [kurikulumId], references: [id])
+  id          String     @id @default(cuid())
+  kurikulumId String?
+  kurikulum   Kurikulum? @relation(fields: [kurikulumId], references: [id])
   
-  kodeMk        String
-  nama          String
-  sks           Int
-  semester      Int
-  jenis         String?
-  deskripsi     String?   @db.Text
+  kodeMk      String
+  nama        String
+  sks         Int
+  semester    Int
+  jenis       String?
+  deskripsi   String?    @db.Text
   
   @@unique([kurikulumId, kodeMk]) 
 }
 
 model Aktifitas {
-  id            String   @id @default(cuid())
-  nama          String
-  deskripsi     String   @db.Text
-  gambarUrls    String[]
-  tanggal       DateTime?
+  id          String    @id @default(cuid())
+  nama        String
+  deskripsi   String    @db.Text
+  gambarUrls  String[]
+  tanggal     DateTime?
 }
 
 model Fasilitas {
-  id            String   @id @default(cuid())
-  nama          String
-  deskripsi     String   @db.Text
-  gambarUrls    String[]
+  id          String   @id @default(cuid())
+  nama        String
+  deskripsi   String   @db.Text
+  gambarUrls  String[]
 }
 
 model StatistikMahasiswa {
-  id            String   @id @default(cuid())
-  tahun         Int      @unique
-  pendaftar     Int
-  diterima      Int
-  lulusan       Int
+  id        String   @id @default(cuid())
+  tahun     Int      @unique
+  pendaftar Int
+  diterima  Int
+  lulusan   Int
 }

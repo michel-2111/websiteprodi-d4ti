@@ -4,12 +4,10 @@ import { PrismaClient } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/src/lib/auth";
-import { uploadFileToSupabase } from "@/src/lib/supabase";
-import { uploadMultipleFilesToSupabase } from "@/src/lib/supabase";
 
 const prisma = new PrismaClient();
 
-export async function createPengabdian(formData: FormData) {
+export async function createBukuAjar(formData: FormData) {
     const session = await getServerSession(authOptions);
     if (!session || !session.user) throw new Error("Unauthorized");
 
@@ -22,25 +20,17 @@ export async function createPengabdian(formData: FormData) {
     const judul = formData.get("judul") as string;
     const deskripsi = formData.get("deskripsi") as string;
     const tahun = parseInt(formData.get("tahun") as string);
-    const anggotaIds = formData.getAll("anggotaIds") as string[];
-
-    const files = formData.getAll("gambar") as File[];
-    const validFiles = files.filter(file => file.size > 0);
-
-    let gambarUrls: string[] = [];
+    const link = formData.get("link") as string;
     
-    if (validFiles.length > 0) {
-        gambarUrls = await uploadMultipleFilesToSupabase(validFiles, 'pengabdian');
-    }
-
+    const anggotaIds = formData.getAll("anggotaIds") as string[];
     const anggotaConnect = anggotaIds.map(id => ({ id }));
 
-    await prisma.pengabdian.create({
+    await prisma.bukuAjar.create({
         data: {
             judul,
             deskripsi,
             tahun,
-            gambarUrls,
+            link,
             ketuaId: profile.id,
             anggota: {
                 connect: anggotaConnect
@@ -48,13 +38,13 @@ export async function createPengabdian(formData: FormData) {
         }
     });
 
-    revalidatePath("/dosen/pengabdian");
+    revalidatePath("/dosen/buku");
 }
 
-export async function deletePengabdian(id: string) {
+export async function deleteBukuAjar(id: string) {
     const session = await getServerSession(authOptions);
     if (!session || !session.user) throw new Error("Unauthorized");
 
-    await prisma.pengabdian.delete({ where: { id } });
-    revalidatePath("/dosen/pengabdian");
+    await prisma.bukuAjar.delete({ where: { id } });
+    revalidatePath("/dosen/buku");
 }

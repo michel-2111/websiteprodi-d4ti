@@ -26,7 +26,9 @@ const menus = {
         { name: "Publikasi", href: "/dosen/publikasi", icon: FileText },
         { name: "Penelitian", href: "/dosen/penelitian", icon: Search },
         { name: "Pengabdian", href: "/dosen/pengabdian", icon: HeartHandshake },
-        { name: "Sertifikat", href: "/dosen/sertifikat", icon: Award },
+        { name: "Buku Ajar", href: "/dosen/buku", icon: BookOpen },
+        { name: "HKI", href: "/dosen/hki", icon: Award },
+        { name: "Sertifikat", href: "/dosen/sertifikat", icon: FileCheck },
         { name: "Pengaturan", href: "/dosen/pengaturan", icon: UserCog },
     ],
     GKM: [

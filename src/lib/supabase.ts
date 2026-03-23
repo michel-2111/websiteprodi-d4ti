@@ -40,3 +40,13 @@ export async function uploadFileToSupabase(file: File, folder: string): Promise<
         throw new Error("Gagal mengunggah file ke server penyimpanan.");
     }
 }
+
+export async function uploadMultipleFilesToSupabase(files: File[], folder: string): Promise<string[]> {
+    if (!files || files.length === 0) return [];
+
+    const uploadPromises = files.map(file => uploadFileToSupabase(file, folder));
+    
+    const publicUrls = await Promise.all(uploadPromises);
+    
+    return publicUrls;
+}
