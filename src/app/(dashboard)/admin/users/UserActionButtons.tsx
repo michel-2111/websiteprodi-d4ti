@@ -6,22 +6,22 @@ import { deleteUser, updateUser } from "@/src/app/actions/user";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Edit, Trash2, X } from "lucide-react";
+import { Edit, Trash2, X, AlertTriangle } from "lucide-react"
 
 export default function UserActionButtons({ user }: { user: any }) {
     const [isEditOpen, setIsEditOpen] = useState(false);
+    const [isDeleteOpen, setIsDeleteOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
 
-    const handleDelete = async () => {
-        if (window.confirm(`PERINGATAN!\n\nYakin ingin menghapus pengguna ${user.name}? Jika pengguna ini adalah Dosen, seluruh data profil dan karyanya juga akan ikut terhapus permanen.`)) {
-            setIsDeleting(true);
-            try {
-                await deleteUser(user.id);
-                toast.success("Pengguna berhasil dihapus!");
-            } catch (e) {
-                toast.error("Gagal menghapus pengguna.");
-                setIsDeleting(false);
-            }
+    const executeDelete = async () => {
+        setIsDeleting(true);
+        try {
+            await deleteUser(user.id);
+            toast.success("Pengguna berhasil dihapus!");
+            setIsDeleteOpen(false);
+        } catch (e) {
+            toast.error("Gagal menghapus pengguna.");
+            setIsDeleting(false);
         }
     };
 
@@ -42,12 +42,11 @@ export default function UserActionButtons({ user }: { user: any }) {
                 <Button variant="outline" size="sm" onClick={() => setIsEditOpen(true)} className="text-blue-600 border-blue-200 hover:bg-blue-50 h-8 px-2">
                     <Edit className="h-4 w-4" />
                 </Button>
-                <Button variant="outline" size="sm" onClick={handleDelete} disabled={isDeleting} className="text-red-600 border-red-200 hover:bg-red-50 h-8 px-2">
+                <Button variant="outline" size="sm" onClick={() => setIsDeleteOpen(true)} disabled={isDeleting} className="text-red-600 border-red-200 hover:bg-red-50 h-8 px-2">
                     <Trash2 className="h-4 w-4" />
                 </Button>
             </div>
 
-            {/* Modal Edit Pop-up */}
             {isEditOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-900/40 backdrop-blur-sm p-4">
                     <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
@@ -88,6 +87,45 @@ export default function UserActionButtons({ user }: { user: any }) {
                                 <Button type="submit" className="bg-zinc-900 hover:bg-zinc-800 text-white">Simpan Perubahan</Button>
                             </div>
                         </form>
+                    </div>
+                </div>
+            )}
+
+            {isDeleteOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-900/60 backdrop-blur-sm p-4">
+                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                        <div className="p-6 text-center">
+                            <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <AlertTriangle className="h-8 w-8" />
+                            </div>
+                            
+                            <h3 className="font-bold text-xl text-zinc-900 mb-2">Hapus Pengguna?</h3>
+                            
+                            <p className="text-zinc-500 text-sm mb-6 leading-relaxed whitespace-normal break-words">
+                                Yakin ingin menghapus <span className="font-bold text-zinc-900">{user.name}</span>? 
+                                Jika pengguna ini adalah Dosen, seluruh data profil dan karyanya akan ikut terhapus permanen.
+                            </p>
+                            
+                            <div className="grid grid-cols-2 gap-3">
+                                <Button 
+                                    type="button" 
+                                    variant="outline" 
+                                    onClick={() => setIsDeleteOpen(false)} 
+                                    disabled={isDeleting} 
+                                    className="w-full"
+                                >
+                                    Batal
+                                </Button>
+                                <Button 
+                                    type="button" 
+                                    onClick={executeDelete} 
+                                    disabled={isDeleting} 
+                                    className="w-full bg-red-600 hover:bg-red-700 text-white"
+                                >
+                                    {isDeleting ? "Menghapus..." : "Ya, Hapus"}
+                                </Button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             )}
