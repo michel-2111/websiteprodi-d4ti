@@ -355,7 +355,6 @@ export default async function DosenDetailPage({ params }: { params: Promise<{ id
                             )}
                         </div>
                     </TabsContent>
-
                 </Tabs>
             </div>
         </div>

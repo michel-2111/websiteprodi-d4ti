@@ -76,7 +76,6 @@ export default async function DosenPublikPage() {
                             <ScrollAnimate key={dosen.id} delay={index < 8 ? index * 80 : 0}>
                                 <Link href={`/dosen-publik/${dosen.id}`} className="block">
                                     <div className="bg-white rounded-2xl border border-zinc-200/80 overflow-hidden hover:shadow-xl transition-all duration-300 group card-hover cursor-pointer h-full flex flex-col">
-                                        {/* Foto Area */}
                                         <div className="aspect-square bg-zinc-100 relative overflow-hidden">
                                             {profil.fotoUrl ? (
                                                 <img
@@ -90,8 +89,7 @@ export default async function DosenPublikPage() {
                                                     <span className="text-sm font-medium">Belum ada foto</span>
                                                 </div>
                                             )}
-                                            
-                                            {/* Badge Jabatan Fungsional (Baru ditambahkan di atas foto) */}
+                                            s
                                             {profil.jabatanFungsional && (
                                                 <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-md text-xs font-bold text-zinc-800 shadow flex items-center">
                                                     <Briefcase className="h-3 w-3 mr-1.5 text-blue-600" />
