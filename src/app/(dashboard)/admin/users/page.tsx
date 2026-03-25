@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import UserActionButtons from "./UserActionButtons";
 
 const prisma = new PrismaClient();
 
@@ -38,6 +39,7 @@ export default async function UsersPage() {
                 <TableHead>Email</TableHead>
                 <TableHead>Role</TableHead>
                 <TableHead>Tanggal Dibuat</TableHead>
+                <TableHead className="text-right">Aksi</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -54,11 +56,14 @@ export default async function UsersPage() {
                     </span>
                     </TableCell>
                     <TableCell>{user.createdAt.toLocaleDateString("id-ID")}</TableCell>
+                    <TableCell className="text-right">
+                        <UserActionButtons user={user} />
+                    </TableCell>
                 </TableRow>
                 ))}
                 {users.length === 0 && (
                 <TableRow>
-                    <TableCell colSpan={4} className="text-center text-zinc-500 h-24">
+                    <TableCell colSpan={5} className="text-center text-zinc-500 h-24">
                     Belum ada data pengguna.
                     </TableCell>
                 </TableRow>
