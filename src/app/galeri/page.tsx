@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { Building2, Activity, Calendar, Images } from "lucide-react";
+import { Building2, Activity, Calendar, Images, FileText } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from "next/link";
 import ScrollAnimate from "@/src/components/ScrollAnimate";
@@ -12,6 +12,13 @@ export default async function GaleriPage() {
         prisma.fasilitas.findMany({ orderBy: { nama: 'asc' } }),
         prisma.aktifitas.findMany({ orderBy: { tanggal: 'desc' } })
     ]);
+
+function isImage(url: string) {
+    if (!url) return false;
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
+    const lowerUrl = url.toLowerCase();
+    return imageExtensions.some(ext => lowerUrl.includes(ext));
+}
 
     return (
         <div className="min-h-screen bg-zinc-50 pb-24">
@@ -40,7 +47,7 @@ export default async function GaleriPage() {
                             <Building2 className="h-4 w-4 mr-2" /> Fasilitas
                         </TabsTrigger>
                         <TabsTrigger value="aktifitas" className="rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all">
-                            <Activity className="h-4 w-4 mr-2" /> Aktifitas
+                            <Activity className="h-4 w-4 mr-2" /> Tri Dharma
                         </TabsTrigger>
                     </TabsList>
 
@@ -79,23 +86,38 @@ export default async function GaleriPage() {
 
                     <TabsContent value="aktifitas" className="mt-0">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {aktifitasList.map((item, index) => (
+                            {aktifitasList.map((item, index) => {
+                                const coverImage = item.gambarUrls?.find(url => isImage(url));
+                                const totalFiles = item.gambarUrls?.length || 0;
+                                const extraFilesCount = totalFiles > 1 ? totalFiles - 1 : 0;
+
+                                return (
                                 <ScrollAnimate key={item.id} delay={index < 6 ? index * 100 : 0}>
                                     <Link href={`/galeri/aktifitas/${item.id}`} className="bg-white rounded-2xl border border-zinc-200/80 overflow-hidden shadow-sm hover:shadow-xl transition-all group flex flex-col card-hover">
                                         <div className="aspect-[16/9] bg-zinc-100 relative overflow-hidden">
-                                            {item.gambarUrls && item.gambarUrls.length > 0 ? (
+                                            {coverImage ? (
                                                 <>
-                                                    <img src={item.gambarUrls[0]} alt={item.nama} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                                                    {item.gambarUrls.length > 1 && (
+                                                    <img src={coverImage} alt={item.nama} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                                    
+                                                    {extraFilesCount > 0 && (
                                                         <div className="absolute bottom-3 right-3 bg-black/70 backdrop-blur-sm text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center shadow-md">
-                                                            <Images className="h-3 w-3 mr-1.5" /> +{item.gambarUrls.length - 1} Foto
+                                                            <Activity className="h-3 w-3 mr-1.5" /> +{extraFilesCount} Lampiran
                                                         </div>
                                                     )}
                                                 </>
                                             ) : (
                                                 <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-zinc-100 to-zinc-50 text-zinc-400">
-                                                    <Activity className="h-10 w-10 mb-2 opacity-30" />
-                                                    <span className="text-sm font-medium">Tanpa Dokumentasi</span>
+                                                    {totalFiles > 0 ? (
+                                                        <>
+                                                            <FileText className="h-10 w-10 mb-2 opacity-40 text-blue-500" />
+                                                            <span className="text-sm font-medium text-zinc-600">{totalFiles} Dokumen Terlampir</span>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <Activity className="h-10 w-10 mb-2 opacity-30" />
+                                                            <span className="text-sm font-medium">Tanpa Lampiran</span>
+                                                        </>
+                                                    )}
                                                 </div>
                                             )}
                                         </div>
@@ -105,12 +127,14 @@ export default async function GaleriPage() {
                                                 {item.tanggal ? item.tanggal.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : 'Tanggal tidak ditentukan'}
                                             </div>
                                             <h3 className="font-bold text-lg text-zinc-900 mb-3 line-clamp-2">{item.nama}</h3>
-                                            <p className="text-zinc-500 text-sm leading-relaxed line-clamp-3 flex-1">{item.deskripsi}</p>
-                                            <span className="text-blue-600 text-sm font-semibold mt-4 inline-flex items-center group-hover:gap-2 transition-all">Lihat Dokumentasi <span className="group-hover:translate-x-1 transition-transform">&rarr;</span></span>
+                                            <p className="text-zinc-500 text-sm leading-relaxed line-clamp-3 flex-1 text-justify break-all">{item.deskripsi}</p>
+                                            
+                                            <span className="text-blue-600 text-sm font-semibold mt-4 inline-flex items-center group-hover:gap-2 transition-all">Lihat Detail & Lampiran <span className="group-hover:translate-x-1 transition-transform">&rarr;</span></span>
                                         </div>
                                     </Link>
                                 </ScrollAnimate>
-                            ))}
+                                );
+                            })}
                         </div>
                     </TabsContent>
 

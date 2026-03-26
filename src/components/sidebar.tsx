@@ -18,7 +18,7 @@ const menus = {
         { name: "Kurikulum", href: "/admin/kurikulum", icon: BookOpen },
         { name: "Data Dosen", href: "/admin/data-dosen", icon: Users },
         { name: "Fasilitas", href: "/admin/fasilitas", icon: Building2 },
-        { name: "Aktifitas", href: "/admin/aktifitas", icon: Activity },
+        { name: "Tri Dharma", href: "/admin/aktifitas", icon: Activity },
         { name: "Dokumen", href: "/admin/dokumen", icon: FileText },
         { name: "Pengaturan", href: "/admin/pengaturan", icon: Cog },
     ],
@@ -51,7 +51,6 @@ export default function Sidebar({ role }: { role: string }) {
 
     return (
         <aside className="fixed inset-y-0 left-0 z-50 w-64 bg-zinc-950 flex flex-col">
-            {/* Header */}
             <div className="flex h-16 shrink-0 items-center px-6 border-b border-zinc-800/50">
                 <div className="flex items-center gap-3">
                     <div className={`h-9 w-9 bg-gradient-to-br ${roleColor} rounded-xl flex items-center justify-center text-white font-bold text-sm shadow-lg`}>

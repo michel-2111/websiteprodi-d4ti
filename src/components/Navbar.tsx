@@ -38,7 +38,7 @@ export default function Navbar() {
         { name: "Beranda", href: "/" },
         { name: "Profil Dosen", href: "/dosen-publik" },
         { name: "Kurikulum", href: "/kurikulum-publik" },
-        { name: "Fasilitas & Aktifitas", href: "/galeri" },
+        { name: "Fasilitas & Tri Dharma", href: "/galeri" },
         { name: "Penjaminan Mutu", href: "/laporan-mutu" },
     ];
 

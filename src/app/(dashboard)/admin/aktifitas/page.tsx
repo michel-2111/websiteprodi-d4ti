@@ -16,11 +16,11 @@ export default async function AktifitasPage() {
         <div className="space-y-6">
         <div className="flex items-center justify-between">
             <div>
-            <h2 className="text-2xl font-bold tracking-tight">Data Aktifitas</h2>
+            <h2 className="text-2xl font-bold tracking-tight">Data Kegiatan Tri Dharma</h2>
             <p className="text-zinc-500">Kelola publikasi kegiatan Prodi D4 TI.</p>
             </div>
             <Link href="/admin/aktifitas/tambah">
-            <Button><Plus className="h-4 w-4 mr-2" /> Tambah Aktifitas</Button>
+            <Button><Plus className="h-4 w-4 mr-2" /> Tambah Kegiatan</Button>
             </Link>
         </div>
 

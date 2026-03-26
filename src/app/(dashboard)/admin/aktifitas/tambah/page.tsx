@@ -9,36 +9,36 @@ export default function TambahAktifitasPage() {
     return (
         <div className="max-w-2xl space-y-6">
         <div>
-            <h2 className="text-2xl font-bold tracking-tight">Tambah Aktifitas</h2>
-            <p className="text-zinc-500">Publikasikan kegiatan prodi seperti magang, pertukaran pelajar, atau seminar.</p>
+            <h2 className="text-2xl font-bold tracking-tight">Tambah Data Tri Dharma</h2>
+            <p className="text-zinc-500">Publikasikan kegiatan Pendidikan, Penelitian, atau Pengabdian kepada Masyarakat.</p>
         </div>
 
         <form action={createAktifitas} className="space-y-6 bg-white p-6 rounded-md border">
             <div className="space-y-2">
-            <Label htmlFor="nama">Nama Kegiatan</Label>
-            <Input id="nama" name="nama" required placeholder="Contoh: Ujian Proposal Skripsi 2026" />
+            <Label htmlFor="nama">Nama Kegiatan/Dokumen</Label>
+            <Input id="nama" name="nama" required placeholder="Contoh: Pengabdian Masyarakat di Desa Bahari 2" />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-                <Label htmlFor="tanggal">Tanggal Pelaksanaan</Label>
+                <Label htmlFor="tanggal">Tanggal Pelaksanaan/Publikasi</Label>
                 <Input id="tanggal" name="tanggal" type="date" required />
             </div>
 
             <div className="space-y-2">
-                <Label htmlFor="gambar">Foto Kegiatan (Max 10MB)</Label>
-                <Input id="gambar" name="gambar" type="file" accept="image/*" multiple required />
+                <Label htmlFor="gambar">Foto Kegiatan/ File Dokumen (Max 10MB)</Label>
+                <Input id="gambar" name="gambar" type="file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx" multiple required />
                 <p className="text-xs text-zinc-500">Bisa pilih lebih dari satu gambar.</p>
             </div>
             </div>
 
             <div className="space-y-2">
-            <Label htmlFor="deskripsi">Deskripsi Kegiatan</Label>
+            <Label htmlFor="deskripsi">Deskripsi Kegiatan/Dokumen</Label>
             <Textarea 
                 id="deskripsi" 
                 name="deskripsi" 
                 required 
-                placeholder="Ceritakan detail kegiatan, peserta, dan hasil dari kegiatan ini..." 
+                placeholder="masukkan deskripsi kegiatan/dokumen..." 
                 className="h-32"
             />
             </div>
