@@ -202,3 +202,12 @@ model StatistikMahasiswa {
   diterima  Int
   lulusan   Int
 }
+
+model Dokumen {
+  id          String   @id @default(cuid())
+  nama        String
+  keterangan  String?  @db.Text
+  fileUrl     String   @db.Text
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

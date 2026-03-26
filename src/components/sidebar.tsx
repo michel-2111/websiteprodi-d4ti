@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import {
-    LayoutDashboard, BookOpen, Users, Building2, Activity, LogOut, UserCog, TrendingUp,
+    LayoutDashboard, BookOpen, Users, Building2, Activity, LogOut, UserCog, TrendingUp, Book, 
     FileText, Search, Award, UserCircle, FileCheck,
     HeartHandshake, Cog, ChevronRight
 } from "lucide-react";
@@ -19,6 +19,7 @@ const menus = {
         { name: "Data Dosen", href: "/admin/data-dosen", icon: Users },
         { name: "Fasilitas", href: "/admin/fasilitas", icon: Building2 },
         { name: "Aktifitas", href: "/admin/aktifitas", icon: Activity },
+        { name: "Dokumen", href: "/admin/dokumen", icon: FileText },
         { name: "Pengaturan", href: "/admin/pengaturan", icon: Cog },
     ],
     DOSEN: [
@@ -29,6 +30,7 @@ const menus = {
         { name: "Buku Ajar", href: "/dosen/buku", icon: BookOpen },
         { name: "HKI", href: "/dosen/hki", icon: Award },
         { name: "Sertifikat", href: "/dosen/sertifikat", icon: FileCheck },
+        { name: "Dokumen", href: "/dosen/dokumen", icon: Book },
         { name: "Pengaturan", href: "/dosen/pengaturan", icon: UserCog },
     ],
     GKM: [
