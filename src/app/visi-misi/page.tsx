@@ -10,9 +10,9 @@ const sectionConfig = [
     { type: "VISI_POLIMDO", title: "Visi Polimdo", id: "visi-polimdo" },
     { type: "MISI_POLIMDO", title: "Misi Polimdo", id: "misi-polimdo" },
     { type: "TUJUAN_POLIMDO", title: "Tujuan Polimdo", id: "tujuan-polimdo" },
-    { type: "VISI_PRODI", title: "Visi Program Studi DIV Informatika", id: "visi-prodi" },
-    { type: "MISI_PRODI", title: "Misi Program Studi DIV Informatika", id: "misi-prodi" },
-    { type: "TUJUAN_PRODI", title: "Tujuan Program Studi DIV Informatika", id: "tujuan-prodi" },
+    { type: "VISI_PRODI", title: "Visi Program Studi D-IV Informatika", id: "visi-prodi" },
+    { type: "MISI_PRODI", title: "Misi Program Studi D-IV Informatika", id: "misi-prodi" },
+    { type: "TUJUAN_PRODI", title: "Tujuan Program Studi D-IV Informatika", id: "tujuan-prodi" },
     { type: "VISI_KEILMUAN", title: "Visi Keilmuan Program Studi", id: "visi-keilmuan" },
 ];
 
