@@ -211,3 +211,21 @@ model Dokumen {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+enum TipeVisiMisi {
+  VISI_POLIMDO
+  MISI_POLIMDO
+  TUJUAN_POLIMDO
+  VISI_PRODI
+  MISI_PRODI
+  TUJUAN_PRODI
+  VISI_KEILMUAN
+}
+
+model VisiMisi {
+  id        String       @id @default(cuid())
+  tipe      TipeVisiMisi @unique
+  konten    String       @db.Text
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}

@@ -17,12 +17,10 @@ export default async function HomePage() {
 
     const statistikData = rawStatistik.reverse();
 
-    // Calculate summary stats from the data
     const latestYear = statistikData.length > 0 ? statistikData[statistikData.length - 1] : null;
 
     return (
         <div className="min-h-screen bg-white">
-            {/* ===== HERO SECTION ===== */}
             <section className="relative overflow-hidden pt-28 pb-36">
                 {/* Campus photo background */}
                 <div className="absolute inset-0">
@@ -30,7 +28,6 @@ export default async function HomePage() {
                     <div className="absolute inset-0 bg-gradient-to-br from-slate-900/80 via-blue-950/70 to-indigo-950/80" />
                 </div>
 
-                {/* Decorative dot pattern */}
                 <div className="absolute inset-0 dot-pattern opacity-30" />
 
                 <div className="relative container mx-auto px-4 text-center">
@@ -48,21 +45,8 @@ export default async function HomePage() {
                     <p className="text-lg md:text-xl text-blue-200/80 mb-10 max-w-2xl mx-auto animate-fade-in-up delay-200" style={{ animationFillMode: 'both' }}>
                         Menghasilkan lulusan unggul, inovatif, dan siap kerja di bidang rekayasa perangkat lunak, jaringan, dan sistem cerdas.
                     </p>
-                    {/* <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up delay-300" style={{ animationFillMode: 'both' }}>
-                        <Link href="/kurikulum-publik">
-                            <Button size="lg" className="h-13 px-8 text-base bg-white text-slate-900 hover:bg-blue-50 shadow-xl shadow-black/20 hover:shadow-2xl transition-all font-semibold">
-                                Lihat Kurikulum <ArrowRight className="ml-2 h-4 w-4" />
-                            </Button>
-                        </Link>
-                        <Link href="/dosen-publik">
-                            <Button variant="outline" size="lg" className="h-13 px-8 text-base border-white/30 text-white hover:bg-white/10 backdrop-blur-sm transition-all">
-                                Profil Pengajar
-                            </Button>
-                        </Link>
-                    </div> */}
                 </div>
 
-                {/* Bottom wave divider */}
                 <div className="absolute bottom-0 left-0 right-0">
                     <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" className="w-full h-16 md:h-20">
                         <path d="M0 40L48 36C96 32 192 24 288 28C384 32 480 48 576 52C672 56 768 48 864 40C960 32 1056 24 1152 28C1248 32 1344 48 1392 56L1440 64V80H1392C1344 80 1248 80 1152 80C1056 80 960 80 864 80C768 80 672 80 576 80C480 80 384 80 288 80C192 80 96 80 48 80H0V40Z" fill="white" />
@@ -70,7 +54,6 @@ export default async function HomePage() {
                 </div>
             </section>
 
-            {/* ===== STATISTIK SECTION ===== */}
             <section className="py-24 bg-white">
                 <div className="container mx-auto px-4">
                     <ScrollAnimate>
@@ -84,7 +67,6 @@ export default async function HomePage() {
                         </div>
                     </ScrollAnimate>
 
-                    {/* Summary stat cards */}
                     {latestYear && (
                         <ScrollAnimate delay={100}>
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto mb-10">
@@ -115,7 +97,6 @@ export default async function HomePage() {
                 </div>
             </section>
 
-            {/* ===== FEATURE CARDS SECTION ===== */}
             <section className="py-24 bg-gradient-to-b from-zinc-50 to-white">
                 <div className="container mx-auto px-4">
                     <ScrollAnimate>
@@ -171,7 +152,6 @@ export default async function HomePage() {
                 </div>
             </section>
 
-            {/* Wave divider before footer */}
             <div className="bg-gradient-to-b from-white to-zinc-100">
                 <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" className="w-full h-12">
                     <path d="M0 30L60 25C120 20 240 10 360 15C480 20 600 40 720 45C840 50 960 40 1080 30C1200 20 1320 10 1380 5L1440 0V60H0V30Z" fill="#09090b" />

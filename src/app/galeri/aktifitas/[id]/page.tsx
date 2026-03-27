@@ -1,13 +1,12 @@
 import { PrismaClient } from "@prisma/client";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Activity, Calendar, FileText, Download } from "lucide-react"; // <-- Tambahkan FileText & Download
+import { ArrowLeft, Activity, Calendar, FileText, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const prisma = new PrismaClient();
 export const revalidate = 60;
 
-// ---> FUNGSI BARU: Mengecek apakah URL adalah gambar <---
 function isImage(url: string) {
   if (!url) return false;
   const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
@@ -18,7 +17,6 @@ function isImage(url: string) {
 export default async function AktifitasDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   
-  // Catatan: Jika Anda merename tabel di Prisma, sesuaikan kata 'aktifitas' di bawah
   const aktifitas = await prisma.aktifitas.findUnique({ where: { id } });
 
   if (!aktifitas) notFound();
@@ -26,7 +24,6 @@ export default async function AktifitasDetailPage({ params }: { params: Promise<
   return (
     <div className="min-h-screen bg-zinc-50 pb-24 pt-8">
       <div className="container mx-auto px-4 max-w-5xl">
-        {/* Sesuaikan href ini jika route halamannya juga Anda ubah */}
         <Link href="/galeri">
           <Button variant="ghost" size="sm" className="mb-6 -ml-3 text-zinc-500 hover:text-zinc-900">
             <ArrowLeft className="h-4 w-4 mr-2" /> Kembali
@@ -35,7 +32,6 @@ export default async function AktifitasDetailPage({ params }: { params: Promise<
 
         <div className="bg-white rounded-2xl border p-8 md:p-12 mb-8 shadow-sm">
           <div className="flex flex-wrap items-center gap-4 mb-6">
-            {/* ---> UBAH TEKS: Menjadi Tri Dharma <--- */}
             <div className="inline-flex items-center rounded-full bg-blue-50 px-3 py-1 text-sm font-medium text-blue-700">
               <Activity className="h-4 w-4 mr-2" /> Tri Dharma
             </div>
@@ -51,7 +47,6 @@ export default async function AktifitasDetailPage({ params }: { params: Promise<
           <p className="text-lg text-zinc-600 leading-relaxed whitespace-pre-wrap">{aktifitas.deskripsi}</p>
         </div>
 
-        {/* ---> UBAH TEKS: Menjadi Lampiran & Dokumentasi <--- */}
         <h2 className="text-2xl font-bold text-zinc-900 mb-6 px-2">
           Lampiran & Dokumentasi ({aktifitas.gambarUrls.length})
         </h2>
@@ -61,7 +56,6 @@ export default async function AktifitasDetailPage({ params }: { params: Promise<
             {aktifitas.gambarUrls.map((url, index) => (
               <div key={index} className="aspect-[4/3] rounded-xl overflow-hidden border bg-zinc-100 shadow-sm hover:shadow-md transition-shadow group relative">
                 
-                {/* ---> LOGIKA CONDITIONAL RENDERING <--- */}
                 {isImage(url) ? (
                   /* JIKA GAMBAR */
                   <img 
@@ -70,7 +64,6 @@ export default async function AktifitasDetailPage({ params }: { params: Promise<
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                   />
                 ) : (
-                  /* JIKA DOKUMEN (PDF, DOCX, XLSX) */
                   <a 
                       href={url} 
                       target="_blank" 

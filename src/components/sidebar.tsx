@@ -6,7 +6,8 @@ import { signOut } from "next-auth/react";
 import {
     LayoutDashboard, BookOpen, Users, Building2, Activity, LogOut, UserCog, TrendingUp, Book, 
     FileText, Search, Award, UserCircle, FileCheck,
-    HeartHandshake, Cog, ChevronRight
+    HeartHandshake, Cog, ChevronRight,
+    Target
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -20,6 +21,7 @@ const menus = {
         { name: "Fasilitas", href: "/admin/fasilitas", icon: Building2 },
         { name: "Tri Dharma", href: "/admin/aktifitas", icon: Activity },
         { name: "Dokumen", href: "/admin/dokumen", icon: FileText },
+        { name: "Visi Misi", href: "/admin/visi-misi", icon: Target },
         { name: "Pengaturan", href: "/admin/pengaturan", icon: Cog },
     ],
     DOSEN: [
