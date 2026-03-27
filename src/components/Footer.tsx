@@ -56,7 +56,7 @@ export default function Footer() {
                             <li><Link href="/" className="text-sm text-zinc-400 hover:text-blue-400 transition-colors flex items-center gap-2"><span className="h-1.5 w-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></span> Beranda Utama</Link></li>
                             <li><Link href="/dosen-publik" className="text-sm text-zinc-400 hover:text-blue-400 transition-colors flex items-center gap-2"><span className="h-1.5 w-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></span> Direktori Pengajar</Link></li>
                             <li><Link href="/kurikulum-publik" className="text-sm text-zinc-400 hover:text-blue-400 transition-colors flex items-center gap-2"><span className="h-1.5 w-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></span> Struktur Kurikulum</Link></li>
-                            <li><Link href="/galeri" className="text-sm text-zinc-400 hover:text-blue-400 transition-colors flex items-center gap-2"><span className="h-1.5 w-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></span> Fasilitas & Aktifitas</Link></li>
+                            <li><Link href="/galeri" className="text-sm text-zinc-400 hover:text-blue-400 transition-colors flex items-center gap-2"><span className="h-1.5 w-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></span> Fasilitas & Tri Dharma</Link></li>
                             <li><Link href="/laporan-mutu" className="text-sm text-zinc-400 hover:text-blue-400 transition-colors flex items-center gap-2"><span className="h-1.5 w-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></span> Penjaminan Mutu (GKM)</Link></li>
                         </ul>
                     </div>
@@ -90,7 +90,7 @@ export default function Footer() {
                                 <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center shrink-0">
                                     <Globe className="h-4 w-4 text-blue-400" />
                                 </div>
-                                <span>ti.polimdo.ac.id</span>
+                                <span>teknikelektropolimdo.com</span>
                             </li>
                         </ul>
                     </div>

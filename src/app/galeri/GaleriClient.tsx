@@ -8,7 +8,6 @@ import Link from "next/link";
 import ScrollAnimate from "@/src/components/ScrollAnimate";
 import { Button } from "@/components/ui/button";
 
-// Fungsi isImage dipindah ke sini
 function isImage(url: string) {
     if (!url) return false;
     const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
@@ -16,14 +15,12 @@ function isImage(url: string) {
     return imageExtensions.some(ext => lowerUrl.includes(ext));
 }
 
-// Komponen menerima data dari Props
 export default function GaleriClient({ fasilitasList, aktifitasList }: { fasilitasList: any[], aktifitasList: any[] }) {
-    // State sekarang aman digunakan di sini!
     const [searchQuery, setSearchQuery] = useState("");
 
     return (
         <div className="min-h-screen bg-zinc-50 pb-24">
-            <div className="relative bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 overflow-hidden">
+            <div className="relative bg-linear-to-br from-slate-900 via-blue-950 to-indigo-950 overflow-hidden">
                 <div className="absolute inset-0 dot-pattern opacity-30" />
                 <div className="absolute bottom-10 left-10 w-72 h-72 bg-indigo-500/15 rounded-full blur-3xl" />
                 <div className="relative container mx-auto px-4 py-20 text-center max-w-3xl">
@@ -43,21 +40,20 @@ export default function GaleriClient({ fasilitasList, aktifitasList }: { fasilit
             <div className="container mx-auto px-4 mt-12 max-w-6xl">
                 <Tabs defaultValue="fasilitas" className="w-full">
                     <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8 h-12 p-1 bg-white border border-zinc-200 rounded-xl shadow-sm">
-                        <TabsTrigger value="fasilitas" className="rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all">
+                        <TabsTrigger value="fasilitas" className="rounded-lg data-[state=active]:bg-linear-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all">
                             <Building2 className="h-4 w-4 mr-2" /> Fasilitas
                         </TabsTrigger>
-                        <TabsTrigger value="aktifitas" className="rounded-lg data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all">
+                        <TabsTrigger value="aktifitas" className="rounded-lg data-[state=active]:bg-linear-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all">
                             <Activity className="h-4 w-4 mr-2" /> Tri Dharma
                         </TabsTrigger>
                     </TabsList>
 
-                    {/* Konten Fasilitas (Tetap Sama) */}
                     <TabsContent value="fasilitas" className="mt-0">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {fasilitasList.map((item, index) => (
                                 <ScrollAnimate key={item.id} delay={index < 6 ? index * 100 : 0}>
                                     <Link href={`/galeri/fasilitas/${item.id}`} className="bg-white rounded-2xl border border-zinc-200/80 overflow-hidden shadow-sm hover:shadow-xl transition-all group flex flex-col card-hover h-full">
-                                        <div className="aspect-[4/3] bg-zinc-100 relative overflow-hidden">
+                                        <div className="aspect-4/3 bg-zinc-100 relative overflow-hidden">
                                             {item.gambarUrls && item.gambarUrls.length > 0 ? (
                                                 <>
                                                     <img src={item.gambarUrls[0]} alt={item.nama} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
@@ -68,7 +64,7 @@ export default function GaleriClient({ fasilitasList, aktifitasList }: { fasilit
                                                     )}
                                                 </>
                                             ) : (
-                                                <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-zinc-100 to-zinc-50 text-zinc-400">
+                                                <div className="w-full h-full flex flex-col items-center justify-center bg-linear-to-br from-zinc-100 to-zinc-50 text-zinc-400">
                                                     <Building2 className="h-10 w-10 mb-2 opacity-30" />
                                                     <span className="text-sm font-medium">Tanpa Gambar</span>
                                                 </div>
@@ -85,14 +81,13 @@ export default function GaleriClient({ fasilitasList, aktifitasList }: { fasilit
                         </div>
                     </TabsContent>
 
-                    {/* Konten Tri Dharma dengan Search Bar */}
                     <TabsContent value="aktifitas" className="mt-0">
                         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 bg-white p-4 sm:p-6 rounded-2xl border shadow-sm">
                             <div>
                                 <h3 className="text-xl font-bold text-zinc-900">Arsip Tri Dharma</h3>
                                 <p className="text-sm text-zinc-500">Jelajahi dokumentasi dan lampiran kegiatan.</p>
                             </div>
-                            <div className="relative w-full sm:w-[350px] shrink-0">
+                            <div className="relative w-full sm:w-87.5 shrink-0">
                                 <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-400" />
                                 <Input
                                     type="text"
@@ -114,14 +109,14 @@ export default function GaleriClient({ fasilitasList, aktifitasList }: { fasilit
                                     );
                                 })
                                 .map((item, index) => {
-                                    const coverImage = item.gambarUrls?.find(url => isImage(url));
+                                    const coverImage = item.gambarUrls?.find((url: string) => isImage(url));
                                     const totalFiles = item.gambarUrls?.length || 0;
                                     const extraFilesCount = totalFiles > 1 ? totalFiles - 1 : 0;
 
                                     return (
                                         <ScrollAnimate key={item.id} delay={index < 6 ? index * 100 : 0}>
                                             <Link href={`/galeri/aktifitas/${item.id}`} className="bg-white rounded-2xl border border-zinc-200/80 overflow-hidden shadow-sm hover:shadow-xl transition-all group flex flex-col card-hover h-full">
-                                                <div className="aspect-[16/9] bg-zinc-100 relative overflow-hidden">
+                                                <div className="aspect-video bg-zinc-100 relative overflow-hidden">
                                                     {coverImage ? (
                                                         <>
                                                             <img src={coverImage} alt={item.nama} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
@@ -172,7 +167,7 @@ export default function GaleriClient({ fasilitasList, aktifitasList }: { fasilit
                                 </div>
                                 <h3 className="text-lg font-bold text-zinc-900 mb-1">Hasil Tidak Ditemukan</h3>
                                 <p className="text-zinc-500 max-w-sm mx-auto mb-4">
-                                    Kami tidak dapat menemukan data Tri Dharma yang cocok dengan kata kunci "{searchQuery}".
+                                    Kami tidak dapat menemukan data Tri Dharma yang cocok dengan kata kunci &quot;{searchQuery}&quot;.
                                 </p>
                                 <Button variant="outline" onClick={() => setSearchQuery("")} className="rounded-full">
                                     Bersihkan Pencarian
