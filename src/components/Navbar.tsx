@@ -38,7 +38,7 @@ export default function Navbar() {
         { name: "Profil Dosen", href: "/dosen-publik" },
         { name: "Kurikulum", href: "/kurikulum-publik" },
         { name: "Fasilitas & Tri Dharma", href: "/galeri" },
-        { name: "Penjaminan Mutu", href: "/laporan-mutu" },
+        // { name: "Penjaminan Mutu", href: "/laporan-mutu" },
     ];
 
     const visiMisiLinks = [
