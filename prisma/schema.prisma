@@ -229,3 +229,9 @@ model VisiMisi {
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
 }
+
+model Pengunjung {
+  id        String   @id @default("global")
+  total     Int      @default(0)
+  updatedAt DateTime @updatedAt
+}
