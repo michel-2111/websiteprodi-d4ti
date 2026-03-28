@@ -3,7 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { deleteAktifitas } from "@/src/app/actions/aktifitas";
-import { Trash2, Plus, Calendar } from "lucide-react";
+import { Trash2, Plus, Calendar, FileText } from "lucide-react";
 
 const prisma = new PrismaClient();
 
@@ -39,20 +39,28 @@ export default async function AktifitasPage() {
                 {aktifitas.map((item) => (
                 <TableRow key={item.id}>
                     <TableCell>
-                    <div className="relative h-16 w-24 overflow-hidden rounded-md border bg-zinc-100">
-                        <img 
-                        src={item.gambarUrls[0]} 
-                        alt={item.nama} 
-                        className="object-cover w-full h-full"
-                        />
-                        {item.gambarUrls.length > 1 && (
-                        <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white text-xs font-bold">
-                            +{item.gambarUrls.length - 1}
+                        <div className="relative h-16 w-24 overflow-hidden rounded-md border bg-zinc-100 flex items-center justify-center group">
+                            {item.gambarUrls[0]?.match(/\.(pdf|doc|docx|xls|xlsx|ppt|pptx)(?:\?.*)?$/i) ? (
+                                <div className="flex flex-col items-center justify-center w-full h-full bg-blue-50/50 text-blue-500">
+                                    <FileText className="h-6 w-6 mb-1" />
+                                    <span className="text-[9px] font-bold uppercase">Dokumen</span>
+                                </div>
+                            ) : (
+                                <img 
+                                    src={item.gambarUrls[0]} 
+                                    alt={item.nama} 
+                                    className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-110"
+                                />
+                            )}
+
+                            {item.gambarUrls.length > 1 && (
+                                <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white text-xs font-bold">
+                                    +{item.gambarUrls.length - 1}
+                                </div>
+                            )}
                         </div>
-                        )}
-                    </div>
                     </TableCell>
-                    <TableCell className="font-medium">{item.nama}</TableCell>
+                    <TableCell className="max-w-50 font-medium truncate">{item.nama}</TableCell>
                     <TableCell>
                     <div className="flex items-center text-zinc-600 text-sm">
                         <Calendar className="h-4 w-4 mr-2" />

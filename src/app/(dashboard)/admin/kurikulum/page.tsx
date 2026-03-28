@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { setKurikulumAktif, deleteKurikulum } from "@/src/app/actions/kurikulum";
-import { FileText, CheckCircle, Trash2, BookOpen } from "lucide-react";
+import { FileText, CheckCircle, Trash2, BookOpen, Target } from "lucide-react";
 
 const prisma = new PrismaClient();
 
@@ -67,6 +67,11 @@ export default async function KurikulumPage() {
                     <Link href={`/admin/kurikulum/${item.id}/matakuliah`}>
                         <Button variant="secondary" size="sm">
                         <BookOpen className="h-4 w-4 mr-1" /> Mata Kuliah
+                        </Button>
+                    </Link>
+                    <Link href={`/admin/kurikulum/${item.id}/cpl`}>
+                        <Button variant="outline" size="sm" className="text-indigo-600 border-indigo-200 hover:bg-indigo-50">
+                            <Target className="h-4 w-4 mr-1" /> CPL
                         </Button>
                     </Link>
 

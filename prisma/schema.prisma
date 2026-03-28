@@ -160,6 +160,7 @@ model Kurikulum {
   aktif       Boolean      @default(false)
   deskripsi   String?      @db.Text
   mataKuliah  MataKuliah[] 
+  cpl         CPL[]
   
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
@@ -178,6 +179,17 @@ model MataKuliah {
   deskripsi   String?    @db.Text
   
   @@unique([kurikulumId, kodeMk]) 
+}
+
+model CPL {
+  id          String    @id @default(cuid())
+  kode        String    // Contoh: "CPL01"
+  deskripsi   String    @db.Text
+  kurikulumId String
+  kurikulum   Kurikulum @relation(fields: [kurikulumId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
 
 model Aktifitas {

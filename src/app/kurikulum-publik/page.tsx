@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { BookOpen, Download, Info, Layers } from "lucide-react";
+import { BookOpen, Download, Info, Layers, Target, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -13,6 +13,9 @@ export default async function KurikulumPublikPage() {
     const kurikulumAktif = await prisma.kurikulum.findFirst({
         where: { aktif: true },
         include: {
+            cpl: {
+                orderBy: { kode: 'asc' }
+            },
             mataKuliah: {
                 orderBy: [
                     { semester: 'asc' },
@@ -92,6 +95,83 @@ export default async function KurikulumPublikPage() {
                     <path d="M0 30L48 26C96 22 192 14 288 18C384 22 480 38 576 42C672 46 768 38 864 30C960 22 1056 14 1152 18C1248 22 1344 38 1392 46L1440 54V60H0V30Z" fill="#fafafa" />
                 </svg>
             </div>
+                <div className="container mx-auto px-4 max-w-5xl mt-24 mb-20 scroll-mt-24" id="cpl-section">
+                    <ScrollAnimate>
+                        <div className="text-center mb-10">
+                            <h2 className="text-2xl font-bold text-zinc-900">Capaian Pembelajaran Lulusan (CPL)</h2>
+                            <p className="text-zinc-500 mt-2">Kompetensi dan keahlian yang akan dikuasai mahasiswa setelah menyelesaikan program studi.</p>
+                        </div>
+                    </ScrollAnimate>
+
+                    <ScrollAnimate delay={100}>
+                        <div className="bg-white rounded-2xl border border-zinc-200/80 shadow-sm overflow-hidden">
+                            <div className="bg-linear-to-r from-slate-900 to-blue-950 px-6 py-4 flex items-center justify-center text-white">
+                                <h3 className="text-lg font-bold">Daftar Capaian Pembelajaran</h3>
+                            </div>
+
+                            <div className="overflow-x-auto">
+                                <Table>
+                                    <TableHeader className="bg-zinc-50/80">
+                                        <TableRow>
+                                            <TableHead className="w-32 font-semibold text-zinc-900 pl-6">Kode CPL</TableHead>
+                                            <TableHead className="font-semibold text-zinc-900 items-center">Deskripsi Capaian Pembelajaran</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {kurikulumAktif?.cpl && kurikulumAktif.cpl.length > 0 ? (
+                                            kurikulumAktif.cpl.map((item) => (
+                                                <TableRow key={item.id} className="hover:bg-blue-50/30 transition-colors">
+                                                    <TableCell className="pl-6 align-top pt-5">
+                                                        <span className="font-mono text-xs font-bold text-blue-700 bg-blue-50 border border-blue-100 px-2.5 py-1 rounded-md">
+                                                            {item.kode}
+                                                        </span>
+                                                    </TableCell>
+                                                    <TableCell className="w-full max-w-75 md:max-w-112.5 py-4 pr-6">
+                                                        <Dialog>
+                                                            <DialogTrigger asChild>
+                                                                <div className="cursor-pointer group">
+                                                                    <p className="text-sm text-zinc-700 line-clamp-2 group-hover:text-blue-600 transition-colors leading-relaxed truncate">
+                                                                        {item.deskripsi}
+                                                                    </p>
+                                                                    <p className="text-[10px] font-bold text-blue-600 mt-1 opacity-0 group-hover:opacity-100 transition-opacity flex items-center">
+                                                                        Lihat Deskripsi Lengkap &rarr;
+                                                                    </p>
+                                                                </div>
+                                                            </DialogTrigger>
+                                                            
+                                                            <DialogContent className="sm:max-w-137.5 bg-white rounded-2xl">
+                                                                <DialogHeader>
+                                                                    <DialogTitle className="text-2xl font-bold text-zinc-900">
+                                                                        Capaian Pembelajaran
+                                                                    </DialogTitle>
+                                                                    <div className="flex items-center gap-2 pt-2 pb-4 border-b border-zinc-100">
+                                                                        <span className="text-xs font-semibold bg-blue-50 border border-blue-100 text-blue-700 px-2 py-1 rounded-md">
+                                                                            Kode: {item.kode}
+                                                                        </span>
+                                                                    </div>
+                                                                </DialogHeader>
+                                                                
+                                                                <div className="mt-2 text-zinc-600 leading-relaxed text-justify whitespace-pre-line">
+                                                                    {item.deskripsi}
+                                                                </div>
+                                                            </DialogContent>
+                                                        </Dialog>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))
+                                        ) : (
+                                            <TableRow>
+                                                <TableCell colSpan={2} className="text-center text-zinc-500 h-32">
+                                                    Data Capaian Pembelajaran Lulusan (CPL) belum tersedia.
+                                                </TableCell>
+                                            </TableRow>
+                                        )}
+                                    </TableBody>
+                                </Table>
+                            </div>
+                        </div>
+                    </ScrollAnimate>
+                </div>
 
             <div className="container mx-auto px-4 max-w-5xl mt-12 space-y-12">
                 <ScrollAnimate>

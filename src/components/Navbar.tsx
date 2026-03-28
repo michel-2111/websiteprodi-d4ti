@@ -67,8 +67,8 @@ export default function Navbar() {
     return (
         <>
             <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${scrolled
-                ? "bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-950 backdrop-blur-xl shadow-lg shadow-blue-950/30 border-b border-white/10"
-                : "bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-950 border-b border-white/10"
+                ? "bg-linear-to-r from-slate-900 via-blue-950 to-indigo-950 backdrop-blur-xl shadow-lg shadow-blue-950/30 border-b border-white/10"
+                : "bg-linear-to-r from-slate-900 via-blue-950 to-indigo-950 border-b border-white/10"
                 }`}>
                 <div className="container mx-auto px-4 h-16 flex items-center justify-between">
                     <Link href="/" className="flex items-center gap-3 group">
