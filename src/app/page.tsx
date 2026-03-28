@@ -59,9 +59,14 @@ export default async function HomePage() {
 
                 <div className="relative container mx-auto px-4 text-center">
                     <div className="animate-fade-in-up">
-                        <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 text-sm text-blue-200 mb-8">
+                        <a 
+                            href="https://polimdo.ac.id" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 transition-colors cursor-pointer backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 text-sm text-blue-200 mb-8"
+                        >
                             <GraduationCap className="h-4 w-4" /> Politeknik Negeri Manado
-                        </div>
+                        </a>
                     </div>
 
                     <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-6 animate-fade-in-up delay-100" style={{ animationFillMode: 'both' }}>
