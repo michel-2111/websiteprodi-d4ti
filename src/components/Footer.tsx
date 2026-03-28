@@ -58,7 +58,7 @@ export default function Footer() {
                             <li><Link href="/dosen-publik" className="text-sm text-zinc-400 hover:text-blue-400 transition-colors flex items-center gap-2"><span className="h-1.5 w-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></span> Direktori Pengajar</Link></li>
                             <li><Link href="/kurikulum-publik" className="text-sm text-zinc-400 hover:text-blue-400 transition-colors flex items-center gap-2"><span className="h-1.5 w-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></span> Struktur Kurikulum</Link></li>
                             <li><Link href="/galeri" className="text-sm text-zinc-400 hover:text-blue-400 transition-colors flex items-center gap-2"><span className="h-1.5 w-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></span> Fasilitas & Tri Dharma</Link></li>
-                            <li><Link href="/laporan-mutu" className="text-sm text-zinc-400 hover:text-blue-400 transition-colors flex items-center gap-2"><span className="h-1.5 w-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></span> Penjaminan Mutu (GKM)</Link></li>
+                            {/* <li><Link href="/laporan-mutu" className="text-sm text-zinc-400 hover:text-blue-400 transition-colors flex items-center gap-2"><span className="h-1.5 w-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></span> Penjaminan Mutu (GKM)</Link></li> */}
                         </ul>
                     </div>
 
