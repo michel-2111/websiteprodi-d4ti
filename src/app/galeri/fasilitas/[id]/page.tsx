@@ -30,19 +30,39 @@ export default async function FasilitasDetailPage({ params }: { params: Promise<
           <p className="text-lg text-zinc-600 leading-relaxed whitespace-pre-wrap">{fasilitas.deskripsi}</p>
         </div>
 
-        <h2 className="text-2xl font-bold text-zinc-900 mb-6 px-2">Galeri Foto ({fasilitas.gambarUrls.length})</h2>
+        <h2 className="text-2xl font-bold text-zinc-900 mb-6 px-2">Galeri Media ({fasilitas.gambarUrls.length})</h2>
         
         {fasilitas.gambarUrls.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {fasilitas.gambarUrls.map((url, index) => (
-              <div key={index} className="aspect-[4/3] rounded-xl overflow-hidden border bg-zinc-100 shadow-sm hover:shadow-md transition-shadow">
-                <img src={url} alt={`Foto ${index + 1}`} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-              </div>
-            ))}
+            {fasilitas.gambarUrls.map((url, index) => {
+              const isVideo = url.match(/\.(mp4|webm|ogg|mov|mkv)(?:\?.*)?$/i);
+              
+              return (
+                <div key={index} className="aspect-[4/3] rounded-xl overflow-hidden border bg-zinc-100 shadow-sm hover:shadow-md transition-shadow group relative flex items-center justify-center">
+                  {isVideo ? (
+                    <div className="w-full h-full relative bg-black">
+                        <video 
+                          src={url} 
+                          className="w-full h-full object-contain"
+                          controls 
+                          preload="metadata"
+                          playsInline
+                        />
+                    </div>
+                  ) : (
+                    <img 
+                      src={url} 
+                      alt={`Media ${index + 1} - ${fasilitas.nama}`} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                    />
+                  )}
+                </div>
+              );
+            })}
           </div>
         ) : (
           <div className="text-center py-16 text-zinc-500 bg-white rounded-2xl border border-dashed">
-            Belum ada dokumentasi foto untuk fasilitas ini.
+            Belum ada dokumentasi media untuk fasilitas ini.
           </div>
         )}
       </div>

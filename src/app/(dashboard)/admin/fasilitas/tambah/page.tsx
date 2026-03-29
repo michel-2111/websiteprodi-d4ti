@@ -20,10 +20,10 @@ export default function TambahFasilitasPage() {
             </div>
 
             <div className="space-y-2">
-            <Label htmlFor="gambar">Foto Fasilitas</Label>
-            <Input id="gambar" name="gambar" type="file" accept="image/*" multiple required />
+            <Label htmlFor="gambar">Foto/Video Fasilitas</Label>
+            <Input id="gambar" name="gambar" type="file" accept="image/*,video/*" multiple required />
                 <p className="text-xs text-zinc-500">
-                Anda dapat memilih lebih dari satu gambar. <strong className="text-zinc-700">Maksimal total ukuran file: 10MB.</strong>
+                Anda dapat memilih lebih dari satu gambar atau video. <strong className="text-zinc-700">Maksimal total ukuran file: 50MB.</strong>
                 </p>
             </div>
 

@@ -27,7 +27,7 @@ export default function TambahAktifitasPage() {
 
             <div className="space-y-2">
                 <Label htmlFor="gambar">Foto Kegiatan/ File Dokumen (Max 10MB)</Label>
-                <Input id="gambar" name="gambar" type="file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx" multiple required />
+                <Input id="gambar" name="gambar" type="file" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.rar" multiple required />
                 <p className="text-xs text-zinc-500">Bisa pilih lebih dari satu gambar.</p>
             </div>
             </div>

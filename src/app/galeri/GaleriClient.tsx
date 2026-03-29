@@ -53,27 +53,50 @@ export default function GaleriClient({ fasilitasList, aktifitasList }: { fasilit
                             {fasilitasList.map((item, index) => (
                                 <ScrollAnimate key={item.id} delay={index < 6 ? index * 100 : 0}>
                                     <Link href={`/galeri/fasilitas/${item.id}`} className="bg-white rounded-2xl border border-zinc-200/80 overflow-hidden shadow-sm hover:shadow-xl transition-all group flex flex-col card-hover h-full">
-                                        <div className="aspect-4/3 bg-zinc-100 relative overflow-hidden">
+                                        
+                                        <div className="aspect-4/3 bg-zinc-100 relative overflow-hidden flex items-center justify-center">
                                             {item.gambarUrls && item.gambarUrls.length > 0 ? (
                                                 <>
-                                                    <img src={item.gambarUrls[0]} alt={item.nama} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                                    {item.gambarUrls[0]?.match(/\.(mp4|webm|ogg|mov|mkv)(?:\?.*)?$/i) ? (
+                                                        <div className="w-full h-full relative">
+                                                            <video 
+                                                                src={item.gambarUrls[0]} 
+                                                                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                                                                preload="metadata"
+                                                                playsInline
+                                                                onClick={(e) => {
+                                                                    e.preventDefault(); 
+                                                                }}
+                                                            />
+                                                            <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/50 to-transparent pointer-events-none" />
+                                                        </div>
+                                                    ) : (
+                                                        <img 
+                                                            src={item.gambarUrls[0]} 
+                                                            alt={item.nama} 
+                                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                                                        />
+                                                    )}
                                                     {item.gambarUrls.length > 1 && (
-                                                        <div className="absolute bottom-3 right-3 bg-black/70 backdrop-blur-sm text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center shadow-md">
-                                                            <Images className="h-3 w-3 mr-1.5" /> +{item.gambarUrls.length - 1} Foto
+                                                        <div className="absolute top-3 right-3 bg-black/70 backdrop-blur-sm text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center shadow-md z-10 pointer-events-none">
+                                                            <Images className="h-3 w-3 mr-1.5" /> 
+                                                            +{item.gambarUrls.length - 1} Media
                                                         </div>
                                                     )}
                                                 </>
                                             ) : (
                                                 <div className="w-full h-full flex flex-col items-center justify-center bg-linear-to-br from-zinc-100 to-zinc-50 text-zinc-400">
                                                     <Building2 className="h-10 w-10 mb-2 opacity-30" />
-                                                    <span className="text-sm font-medium">Tanpa Gambar</span>
+                                                    <span className="text-sm font-medium">Tanpa Media</span>
                                                 </div>
                                             )}
                                         </div>
                                         <div className="p-6 flex-1 flex flex-col">
                                             <h3 className="font-bold text-xl text-zinc-900 mb-3 line-clamp-2">{item.nama}</h3>
                                             <p className="text-zinc-500 text-sm leading-relaxed line-clamp-3 flex-1">{item.deskripsi}</p>
-                                            <span className="text-blue-600 text-sm font-semibold mt-4 inline-flex items-center group-hover:gap-2 transition-all">Lihat Detail <span className="group-hover:translate-x-1 transition-transform">&rarr;</span></span>
+                                            <span className="text-blue-600 text-sm font-semibold mt-4 inline-flex items-center gap-1 group-hover:gap-2 transition-all">
+                                                Lihat Detail <span className="transition-transform">&rarr;</span>
+                                            </span>
                                         </div>
                                     </Link>
                                 </ScrollAnimate>
@@ -127,7 +150,7 @@ export default function GaleriClient({ fasilitasList, aktifitasList }: { fasilit
                                                             )}
                                                         </>
                                                     ) : (
-                                                        <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-zinc-100 to-zinc-50 text-zinc-400">
+                                                        <div className="w-full h-full flex flex-col items-center justify-center bg-linear-to-br from-zinc-100 to-zinc-50 text-zinc-400">
                                                             {totalFiles > 0 ? (
                                                                 <>
                                                                     <FileText className="h-10 w-10 mb-2 opacity-40 text-blue-500" />
