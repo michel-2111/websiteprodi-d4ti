@@ -38,7 +38,7 @@ export default async function FasilitasDetailPage({ params }: { params: Promise<
               const isVideo = url.match(/\.(mp4|webm|ogg|mov|mkv)(?:\?.*)?$/i);
               
               return (
-                <div key={index} className="aspect-[4/3] rounded-xl overflow-hidden border bg-zinc-100 shadow-sm hover:shadow-md transition-shadow group relative flex items-center justify-center">
+                <div key={index} className="aspect-4/3 rounded-xl overflow-hidden border bg-zinc-100 shadow-sm hover:shadow-md transition-shadow group relative flex items-center justify-center">
                   {isVideo ? (
                     <div className="w-full h-full relative bg-black">
                         <video 

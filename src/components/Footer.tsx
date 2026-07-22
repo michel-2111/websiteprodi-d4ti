@@ -88,10 +88,17 @@ export default function Footer() {
                                 <span>info@polimdo.ac.id</span>
                             </li>
                             <li className="flex items-center gap-3 hover:text-white transition-colors">
-                                <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center shrink-0">
-                                    <Globe className="h-4 w-4 text-blue-400" />
-                                </div>
-                                <span>teknikelektropolimdo.com</span>
+                                <a 
+                                    href="https://esekjur-polimdo.com" 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-3 w-full cursor-pointer"
+                                >
+                                    <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center shrink-0">
+                                        <Globe className="h-4 w-4 text-blue-400" />
+                                    </div>
+                                    <span>esekjur-polimdo.com</span>
+                                </a>
                             </li>
                         </ul>
                     </div>
