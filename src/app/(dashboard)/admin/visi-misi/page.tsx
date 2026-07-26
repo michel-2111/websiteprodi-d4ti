@@ -17,7 +17,7 @@ export default async function AdminVisiMisiPage() {
 
     // 3. Filter data Visi Misi HANYA untuk prodi tersebut
     const visiMisiData = await prisma.visiMisi.findMany({
-        where: { prodiId: activeProdiId }, // <-- Filter Multi-Tenancy
+        where: { prodiId: activeProdiId || undefined }, // <-- Filter Multi-Tenancy
         orderBy: { updatedAt: 'desc' }
     });
 
