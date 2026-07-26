@@ -19,7 +19,8 @@ const labelMap: Record<string, string> = {
     "VISI_KEILMUAN": "Visi Keilmuan",
 };
 
-export default function VisiMisiClient({ initialData }: { initialData: any[] }) {
+// Tambahkan prop namaProdi di sini
+export default function VisiMisiClient({ initialData, namaProdi }: { initialData: any[]; namaProdi: string }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -77,7 +78,8 @@ export default function VisiMisiClient({ initialData }: { initialData: any[] }) 
                     </div>
                     <div>
                         <h2 className="text-2xl font-bold tracking-tight">Visi Misi & Tujuan</h2>
-                        <p className="text-zinc-500">Kelola konten arah institusi untuk ditampilkan ke publik.</p>
+                        {/* Judul dinamis berdasarkan prodi */}
+                        <p className="text-zinc-500">Kelola konten arah institusi {namaProdi} untuk ditampilkan ke publik.</p>
                     </div>
                 </div>
                 <Button onClick={handleAddNew} className="bg-zinc-900 text-white hover:bg-zinc-800 shrink-0">
@@ -119,7 +121,8 @@ export default function VisiMisiClient({ initialData }: { initialData: any[] }) 
                         {initialData.length === 0 && (
                             <TableRow>
                                 <TableCell colSpan={3} className="text-center text-zinc-500 py-12">
-                                    Belum ada data Visi Misi yang ditambahkan.
+                                    {/* Sesuaikan pesan data kosong */}
+                                    Belum ada data Visi Misi yang ditambahkan untuk prodi ini.
                                 </TableCell>
                             </TableRow>
                         )}

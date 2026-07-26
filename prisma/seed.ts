@@ -1,29 +1,24 @@
-import { PrismaClient } from '@prisma/client'
-import bcrypt from 'bcryptjs'
-
-const prisma = new PrismaClient()
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient();
 
 async function main() {
-    const hashedPassword = await bcrypt.hash('123123', 10)
+    const prodis = [
+        { nama: 'D4 Teknik Informatika', slug: 'd4-ti' },
+        { nama: 'D4 Teknik Listrik', slug: 'd4-teknik-listrik' },
+        { nama: 'D3 Teknik Listrik', slug: 'd3-teknik-listrik' },
+        { nama: 'D3 Teknik Komputer', slug: 'd3-teknik-komputer' },
+    ];
 
-    const admin = await prisma.user.upsert({
-        where: { email: 'admin@polimdo.ac.id' },
+    for (const prodi of prodis) {
+        await prisma.prodi.upsert({
+        where: { slug: prodi.slug },
         update: {},
-        create: {
-        email: 'admin@polimdo.ac.id',
-        name: 'Super Admin',
-        password: hashedPassword,
-        role: 'ADMIN',
-        },
-    })
-    console.log('Akun admin berhasil dibuat:', admin.email)
+        create: prodi,
+        });
     }
+    console.log('Seeding prodi berhasil!');
+}
 
-    main()
-    .catch((e) => {
-        console.error(e)
-        process.exit(1)
-    })
-    .finally(async () => {
-        await prisma.$disconnect()
-    })
+main()
+    .catch((e) => { console.error(e); process.exit(1); })
+    .finally(async () => { await prisma.$disconnect(); });

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Building2, Activity, Calendar, Images, FileText, Search } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,6 +8,7 @@ import Link from "next/link";
 import ScrollAnimate from "@/src/components/ScrollAnimate";
 import { Button } from "@/components/ui/button";
 
+import { usePathname } from "next/navigation";
 function isImage(url: string) {
     if (!url) return false;
     const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
@@ -15,8 +16,11 @@ function isImage(url: string) {
     return imageExtensions.some(ext => lowerUrl.includes(ext));
 }
 
-export default function GaleriClient({ fasilitasList, aktifitasList }: { fasilitasList: any[], aktifitasList: any[] }) {
+export default function GaleriClient({ fasilitasList, aktifitasList, currentSlug }: { fasilitasList: any[], aktifitasList: any[], currentSlug: string }) {
     const [searchQuery, setSearchQuery] = useState("");
+    // const pathname = usePathname();
+    // const pathSegments = pathname.split("/").filter(Boolean);
+    // const currentSlug = pathSegments[0] || "";
 
     return (
         <div className="min-h-screen bg-zinc-50 pb-24">
@@ -52,7 +56,7 @@ export default function GaleriClient({ fasilitasList, aktifitasList }: { fasilit
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {fasilitasList.map((item, index) => (
                                 <ScrollAnimate key={item.id} delay={index < 6 ? index * 100 : 0}>
-                                    <Link href={`/galeri/fasilitas/${item.id}`} className="bg-white rounded-2xl border border-zinc-200/80 overflow-hidden shadow-sm hover:shadow-xl transition-all group flex flex-col card-hover h-full">
+                                    <Link href={`/${currentSlug}/galeri/fasilitas/${item.id}`} className="bg-white rounded-2xl border border-zinc-200/80 overflow-hidden shadow-sm hover:shadow-xl transition-all group flex flex-col card-hover h-full">
                                         
                                         <div className="aspect-4/3 bg-zinc-100 relative overflow-hidden flex items-center justify-center">
                                             {item.gambarUrls && item.gambarUrls.length > 0 ? (
@@ -138,7 +142,7 @@ export default function GaleriClient({ fasilitasList, aktifitasList }: { fasilit
 
                                     return (
                                         <ScrollAnimate key={item.id} delay={index < 6 ? index * 100 : 0}>
-                                            <Link href={`/galeri/aktifitas/${item.id}`} className="bg-white rounded-2xl border border-zinc-200/80 overflow-hidden shadow-sm hover:shadow-xl transition-all group flex flex-col card-hover h-full">
+                                            <Link href={`/${currentSlug}/galeri/aktifitas/${item.id}`} className="bg-white rounded-2xl border border-zinc-200/80 overflow-hidden shadow-sm hover:shadow-xl transition-all group flex flex-col card-hover h-full">
                                                 <div className="aspect-video bg-zinc-100 relative overflow-hidden">
                                                     {coverImage ? (
                                                         <>

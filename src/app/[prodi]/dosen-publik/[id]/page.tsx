@@ -44,8 +44,21 @@ function gabungDanUrutkanKarya(karyaKetua: any[], karyaAnggota: any[]) {
     });
 }
 
-export default async function DosenDetailPage({ params }: { params: Promise<{ id: string }> }) {
-    const { id } = await params;
+// 1. Ekstrak dua parameter: prodi dan id
+export default async function DosenDetailPage({ 
+    params 
+}: { 
+    params: Promise<{ prodi: string; id: string }> 
+}) {
+    const resolvedParams = await params;
+    const { prodi: slug, id } = resolvedParams;
+
+    // 2. Verifikasi apakah prodi slug valid
+    const prodiAktif = await prisma.prodi.findUnique({
+        where: { slug }
+    });
+
+    if (!prodiAktif) return notFound();
 
     const userInclude = { select: { name: true } };
     const relasiKarya = {
@@ -53,8 +66,13 @@ export default async function DosenDetailPage({ params }: { params: Promise<{ id
         anggota: { include: { user: userInclude } }
     };
 
+    // 3. Pastikan dosen yang dicari benar-benar milik prodi yang sedang diakses
     const dosen = await prisma.user.findUnique({
-        where: { id, role: "DOSEN" },
+        where: { 
+            id, 
+            role: "DOSEN",
+            prodiId: prodiAktif.id // Filter keamanan ekstra
+        },
         include: {
             dosenProfile: {
                 include: {
@@ -85,9 +103,10 @@ export default async function DosenDetailPage({ params }: { params: Promise<{ id
         <div className="min-h-screen bg-zinc-50 pb-24">
             <div className="bg-white border-b pt-8 pb-12">
                 <div className="container mx-auto px-4 max-w-5xl">
-                    <Link href="/dosen-publik">
+                    {/* 4. Sesuaikan link tombol kembali dengan slug prodi */}
+                    <Link href={`/${slug}/dosen-publik`}>
                         <Button variant="ghost" size="sm" className="mb-6 -ml-3 text-zinc-500 hover:text-zinc-900">
-                            <ArrowLeft className="h-4 w-4 mr-2" /> Kembali ke Direktori
+                            <ArrowLeft className="h-4 w-4 mr-2" /> Kembali ke Direktori Pengajar {prodiAktif.nama.replace("Sarjana Terapan", "").replace("D4", "").replace("D3", "").trim()}
                         </Button>
                     </Link>
 
@@ -220,7 +239,8 @@ export default async function DosenDetailPage({ params }: { params: Promise<{ id
                                                     {item.peran}
                                                 </span>
                                             </div>
-                                            <Link href={`/penelitian/${item.id}`} className="hover:underline">
+                                            {/* 5. Sesuaikan link detail penelitian dengan slug */}
+                                            <Link href={`/${slug}/penelitian/${item.id}`} className="hover:underline">
                                                 <h4 className="font-semibold text-lg text-zinc-900 mb-2">{item.judul}</h4>
                                             </Link>
                                             <div className="text-sm text-zinc-600 space-y-1 mt-3 p-3 bg-white rounded-lg border">
@@ -254,7 +274,8 @@ export default async function DosenDetailPage({ params }: { params: Promise<{ id
                                                     {item.peran}
                                                 </span>
                                             </div>
-                                            <Link href={`/pengabdian/${item.id}`} className="hover:underline">
+                                            {/* 6. Sesuaikan link detail pengabdian dengan slug */}
+                                            <Link href={`/${slug}/pengabdian/${item.id}`} className="hover:underline">
                                                 <h4 className="font-semibold text-lg text-zinc-900 mb-2">{item.judul}</h4>
                                             </Link>
                                             <div className="text-sm text-zinc-600 space-y-1 mt-3 p-3 bg-white rounded-lg border">

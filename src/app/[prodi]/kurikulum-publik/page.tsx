@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { notFound } from "next/navigation"; // 1. Import notFound
 import { BookOpen, Download, Info, Layers, Target, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -9,9 +10,29 @@ const prisma = new PrismaClient();
 
 export const revalidate = 60;
 
-export default async function KurikulumPublikPage() {
+// 2. Tambahkan parameter params sebagai Promise
+export default async function KurikulumPublikPage({ 
+    params 
+}: { 
+    params: Promise<{ prodi: string }> 
+}) {
+    // 3. Ekstrak slug secara asinkron
+    const resolvedParams = await params;
+    const { prodi: slug } = resolvedParams;
+
+    // 4. Cari data prodi berdasarkan slug
+    const prodiAktif = await prisma.prodi.findUnique({
+        where: { slug }
+    });
+
+    if (!prodiAktif) return notFound();
+
+    // 5. Ambil kurikulum aktif khusus untuk prodi ini
     const kurikulumAktif = await prisma.kurikulum.findFirst({
-        where: { aktif: true },
+        where: { 
+            aktif: true,
+            prodiId: prodiAktif.id // <-- Filter Multi-Tenancy
+        },
         include: {
             cpl: {
                 orderBy: { kode: 'asc' }
@@ -31,7 +52,7 @@ export default async function KurikulumPublikPage() {
                 <BookOpen className="h-16 w-16 text-zinc-300 mb-4" />
                 <h2 className="text-2xl font-bold text-zinc-900 mb-2">Kurikulum Belum Tersedia</h2>
                 <p className="text-zinc-500 max-w-md">
-                    Saat ini belum ada kurikulum yang diaktifkan oleh Administrator Program Studi. Silakan kembali lagi nanti.
+                    Saat ini belum ada kurikulum yang diaktifkan oleh Administrator {prodiAktif.nama}. Silakan kembali lagi nanti.
                 </p>
             </div>
         );
@@ -51,13 +72,13 @@ export default async function KurikulumPublikPage() {
 
     return (
         <div className="min-h-screen bg-zinc-50 pb-24">
-            <div className="relative bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 overflow-hidden">
+            <div className="relative bg-linear-to-br from-slate-900 via-blue-950 to-indigo-950 overflow-hidden">
                 <div className="absolute inset-0 dot-pattern opacity-30" />
                 <div className="absolute top-10 left-10 w-64 h-64 bg-blue-500/15 rounded-full blur-3xl" />
                 <div className="relative container mx-auto px-4 py-20 max-w-5xl">
                 <div>
                     <div className="inline-flex items-center rounded-full bg-white/10 backdrop-blur-sm border border-white/20 px-3 py-1 text-sm font-medium text-blue-200 mb-4">
-                        <BookOpen className="h-4 w-4 mr-2" /> Kurikulum Aktif
+                        <BookOpen className="h-4 w-4 mr-2" /> Kurikulum Aktif {prodiAktif.nama}
                     </div>
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                         <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-white">
@@ -75,7 +96,7 @@ export default async function KurikulumPublikPage() {
                     </div>
 
                     <p className="text-lg text-blue-200/70 mb-6 leading-relaxed text-justify">
-                        {kurikulumAktif.deskripsi || "Struktur kurikulum yang dirancang untuk menghasilkan lulusan yang kompeten, profesional, dan siap menghadapi tantangan industri teknologi informasi."}
+                        {kurikulumAktif.deskripsi || `Struktur kurikulum yang dirancang untuk menghasilkan lulusan yang kompeten, profesional, dan siap menghadapi tantangan industri bersama ${prodiAktif.nama}.`}
                     </p>
 
                     <div className="inline-flex flex-wrap items-center gap-6 text-sm font-medium text-blue-200 bg-white/5 backdrop-blur-sm border border-white/10 py-3 px-5 rounded-xl">

@@ -44,6 +44,9 @@ model User {
   updatedAt     DateTime  @updatedAt
 
   dosenProfile  DosenProfile?
+
+  prodiId   String?  
+  prodi     Prodi?   @relation(fields: [prodiId], references: [id], onDelete: SetNull)
 }
 
 model DosenProfile {
@@ -164,6 +167,9 @@ model Kurikulum {
   
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
+
+  prodiId     String
+  prodi       Prodi        @relation(fields: [prodiId], references: [id], onDelete: Cascade)
 }
 
 model MataKuliah {
@@ -198,6 +204,9 @@ model Aktifitas {
   deskripsi   String    @db.Text
   gambarUrls  String[]
   tanggal     DateTime?
+
+  prodiId     String
+  prodi       Prodi    @relation(fields: [prodiId], references: [id], onDelete: Cascade)
 }
 
 model Fasilitas {
@@ -205,14 +214,22 @@ model Fasilitas {
   nama        String
   deskripsi   String   @db.Text
   gambarUrls  String[]
+
+  prodiId     String
+  prodi       Prodi    @relation(fields: [prodiId], references: [id], onDelete: Cascade)
 }
 
 model StatistikMahasiswa {
   id        String   @id @default(cuid())
-  tahun     Int      @unique
+  tahun     Int      
   pendaftar Int
   diterima  Int
   lulusan   Int
+
+  prodiId   String
+  prodi     Prodi    @relation(fields: [prodiId], references: [id], onDelete: Cascade)
+
+  @@unique([tahun, prodiId])
 }
 
 model Dokumen {
@@ -222,6 +239,9 @@ model Dokumen {
   fileUrl     String   @db.Text
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  prodiId   String?
+  prodi     Prodi?   @relation(fields: [prodiId], references: [id], onDelete: SetNull)
 }
 
 enum TipeVisiMisi {
@@ -236,14 +256,35 @@ enum TipeVisiMisi {
 
 model VisiMisi {
   id        String       @id @default(cuid())
-  tipe      TipeVisiMisi @unique
+  tipe      TipeVisiMisi 
   konten    String       @db.Text
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
+
+  prodiId   String
+  prodi     Prodi    @relation(fields: [prodiId], references: [id], onDelete: Cascade)
+
+  @@unique([tipe, prodiId])
 }
 
 model Pengunjung {
   id        String   @id @default("global")
   total     Int      @default(0)
   updatedAt DateTime @updatedAt
+}
+
+model Prodi {
+  id        String   @id @default(uuid())
+  nama      String   
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  kurikulum Kurikulum[]
+  fasilitas Fasilitas[]
+  aktifitas Aktifitas[]
+  user      User[]
+  statistikMahasiswa StatistikMahasiswa[]
+  visiMisi           VisiMisi[]
+  dokumen            Dokumen[]
 }

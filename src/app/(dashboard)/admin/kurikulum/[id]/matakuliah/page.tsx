@@ -71,7 +71,7 @@ export default async function MataKuliahPage({
                 <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                     <Label htmlFor="sks">SKS</Label>
-                    <Input id="sks" name="sks" type="number" required min="1" max="6" placeholder="3" />
+                    <Input id="sks" name="sks" type="number" required min="1" max="20" placeholder="3" />
                 </div>
                 
                 <div className="space-y-2">

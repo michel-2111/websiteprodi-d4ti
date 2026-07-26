@@ -14,19 +14,39 @@ function isImage(url: string) {
   return imageExtensions.some(ext => lowerUrl.includes(ext));
 }
 
-export default async function AktifitasDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
+// 1. Sesuaikan parameter untuk menangkap slug prodi dan id aktifitas
+export default async function AktifitasDetailPage({ 
+    params 
+}: { 
+    params: Promise<{ prodi: string; id: string }> 
+}) {
+  const resolvedParams = await params;
+  const { prodi: slug, id } = resolvedParams;
   
-  const aktifitas = await prisma.aktifitas.findUnique({ where: { id } });
+  // 2. Validasi ketersediaan prodi
+  const prodiAktif = await prisma.prodi.findUnique({
+      where: { slug }
+  });
+
+  if (!prodiAktif) return notFound();
+
+  // 3. Gunakan findFirst agar bisa memfilter berdasarkan ID sekaligus prodiId
+  const aktifitas = await prisma.aktifitas.findFirst({ 
+      where: { 
+          id: id,
+          prodiId: prodiAktif.id // Proteksi ekstra agar tidak bocor lintas prodi
+      } 
+  });
 
   if (!aktifitas) notFound();
 
   return (
     <div className="min-h-screen bg-zinc-50 pb-24 pt-8">
       <div className="container mx-auto px-4 max-w-5xl">
-        <Link href="/galeri">
+        {/* 4. Suntikkan variabel slug pada link kembali */}
+        <Link href={`/${slug}/galeri`}>
           <Button variant="ghost" size="sm" className="mb-6 -ml-3 text-zinc-500 hover:text-zinc-900">
-            <ArrowLeft className="h-4 w-4 mr-2" /> Kembali
+            <ArrowLeft className="h-4 w-4 mr-2" /> Kembali ke Galeri
           </Button>
         </Link>
 

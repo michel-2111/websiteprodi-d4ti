@@ -2,22 +2,31 @@ import Link from "next/link";
 import { PrismaClient } from "@prisma/client";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { deleteFasilitas } from "@/src/app/actions/fasilitas";
+import { deleteFasilitas, getFasilitas } from "@/src/app/actions/fasilitas"; // 1. Import getFasilitas
+import { getActiveProdiId } from "@/src/app/actions/prodi-context"; // 2. Import context prodi
 import { Trash2, Plus, Video } from "lucide-react";
 
 const prisma = new PrismaClient();
 
 export default async function FasilitasPage() {
-    const fasilitas = await prisma.fasilitas.findMany({
-        orderBy: { id: 'desc' }
-    });
+    // 3. Gunakan Server Action yang sudah terfilter berdasarkan prodi
+    const fasilitas = await getFasilitas();
+
+    // 4. Ambil informasi nama prodi yang sedang aktif
+    const activeProdiId = await getActiveProdiId();
+    const prodiAktif = activeProdiId 
+        ? await prisma.prodi.findUnique({ where: { id: activeProdiId } })
+        : null;
 
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
                 <div>
                     <h2 className="text-2xl font-bold tracking-tight">Data Fasilitas</h2>
-                    <p className="text-zinc-500">Kelola informasi fasilitas yang ada di Prodi D4 TI.</p>
+                    {/* 5. Ubah deskripsi menjadi dinamis */}
+                    <p className="text-zinc-500">
+                        Kelola informasi fasilitas yang ada di {prodiAktif ? prodiAktif.nama : "Program Studi"}.
+                    </p>
                 </div>
                 <Link href="/admin/fasilitas/tambah">
                     <Button><Plus className="h-4 w-4 mr-2" /> Tambah Fasilitas</Button>
@@ -86,7 +95,8 @@ export default async function FasilitasPage() {
                         {fasilitas.length === 0 && (
                             <TableRow>
                                 <TableCell colSpan={4} className="text-center text-zinc-500 h-24">
-                                    Belum ada data fasilitas.
+                                    {/* Sesuaikan pesan kosong */}
+                                    Belum ada data fasilitas untuk prodi ini.
                                 </TableCell>
                             </TableRow>
                         )}

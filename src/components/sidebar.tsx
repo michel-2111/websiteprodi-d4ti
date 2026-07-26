@@ -11,6 +11,9 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+// 1. IMPORT KOMPONEN SWITCHER
+import ProdiSwitcher from "@/src/components/ProdiSwitcher"; 
+
 const menus = {
     ADMIN: [
         { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -55,7 +58,7 @@ export default function Sidebar({ role }: { role: string }) {
         <aside className="fixed inset-y-0 left-0 z-50 w-64 bg-zinc-950 flex flex-col">
             <div className="flex h-16 shrink-0 items-center px-6 border-b border-zinc-800/50">
                 <div className="flex items-center gap-3">
-                    <div className={`h-9 w-9 bg-gradient-to-br ${roleColor} rounded-xl flex items-center justify-center text-white font-bold text-sm shadow-lg`}>
+                    <div className={`h-9 w-9 bg-linear-to-br ${roleColor} rounded-xl flex items-center justify-center text-white font-bold text-sm shadow-lg`}>
                         TI
                     </div>
                     <div>
@@ -70,28 +73,38 @@ export default function Sidebar({ role }: { role: string }) {
             </div>
 
             {/* Navigation */}
-            <nav className="flex-1 px-3 py-4 overflow-y-auto">
-                <p className="px-3 mb-3 text-xs font-semibold text-zinc-500 uppercase tracking-wider">Menu Utama</p>
-                <div className="space-y-1">
-                    {currentMenus.map((item) => {
-                        const isActive = pathname === item.href || (pathname.startsWith(`${item.href}/`) && item.href !== "/admin" && item.href !== "/dosen" && item.href !== "/gkm");
-                        const Icon = item.icon;
+            <nav className="flex-1 py-4 overflow-y-auto flex flex-col gap-4">
+                
+                {/* 2. RENDER SWITCHER HANYA UNTUK ADMIN */}
+                {role === "ADMIN" && (
+                    <div className="px-3">
+                        <ProdiSwitcher />
+                    </div>
+                )}
 
-                        return (
-                            <Link
-                                key={item.name}
-                                href={item.href}
-                                className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 ${isActive
-                                        ? `bg-gradient-to-r ${roleColor} text-white shadow-lg shadow-blue-500/10`
-                                        : "text-zinc-400 hover:bg-zinc-800/60 hover:text-white"
-                                    }`}
-                            >
-                                <Icon className="h-[18px] w-[18px]" />
-                                <span className="flex-1">{item.name}</span>
-                                {isActive && <ChevronRight className="h-4 w-4 opacity-60" />}
-                            </Link>
-                        );
-                    })}
+                <div className="px-3">
+                    <p className="mb-3 text-xs font-semibold text-zinc-500 uppercase tracking-wider px-2">Menu Utama</p>
+                    <div className="space-y-1">
+                        {currentMenus.map((item) => {
+                            const isActive = pathname === item.href || (pathname.startsWith(`${item.href}/`) && item.href !== "/admin" && item.href !== "/dosen" && item.href !== "/gkm");
+                            const Icon = item.icon;
+
+                            return (
+                                <Link
+                                    key={item.name}
+                                    href={item.href}
+                                    className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200 ${isActive
+                                            ? `bg-linear-to-r ${roleColor} text-white shadow-lg shadow-blue-500/10`
+                                            : "text-zinc-400 hover:bg-zinc-800/60 hover:text-white"
+                                        }`}
+                                >
+                                    <Icon className="h-4.5 w-4.5" />
+                                    <span className="flex-1">{item.name}</span>
+                                    {isActive && <ChevronRight className="h-4 w-4 opacity-60" />}
+                                </Link>
+                            );
+                        })}
+                    </div>
                 </div>
             </nav>
 

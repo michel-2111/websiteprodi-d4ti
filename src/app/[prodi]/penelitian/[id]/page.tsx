@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button";
 const prisma = new PrismaClient();
 export const revalidate = 60;
 
-export default async function PenelitianDetailPage({ params }: { params: Promise<{ id: string }> }) {
-    const { id } = await params;
+export default async function PenelitianDetailPage({ params }: { params: Promise<{ prodi: string; id: string }> }) {
+    const { prodi: currentslug, id } = await params;
 
     const data = await prisma.penelitian.findUnique({
         where: { id },
@@ -25,7 +25,7 @@ export default async function PenelitianDetailPage({ params }: { params: Promise
             {/* Header / Navigasi */}
             <div className="bg-white border-b pt-8 pb-6">
                 <div className="container mx-auto px-4 max-w-4xl">
-                    <Link href={`/dosen-publik/${data.ketua.userId}`}>
+                    <Link href={`/${currentslug}/dosen-publik/${data.ketua.userId}`}>
                         <Button variant="ghost" size="sm" className="mb-4 -ml-3 text-zinc-500 hover:text-blue-600">
                             <ArrowLeft className="h-4 w-4 mr-2" /> Kembali ke Profil {data.ketua.user.name}
                         </Button>
@@ -90,7 +90,7 @@ export default async function PenelitianDetailPage({ params }: { params: Promise
                                 {/* Ketua */}
                                 <div>
                                     <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Ketua Peneliti</p>
-                                    <Link href={`/dosen-publik/${data.ketua.userId}`} className="flex items-center gap-3 p-2 -mx-2 rounded-lg hover:bg-zinc-50 transition-colors group">
+                                    <Link href={`/${currentslug}/dosen-publik/${data.ketua.userId}`} className="flex items-center gap-3 p-2 -mx-2 rounded-lg hover:bg-zinc-50 transition-colors group">
                                         <div className="h-10 w-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
                                             <User className="h-5 w-5" />
                                         </div>
@@ -106,7 +106,7 @@ export default async function PenelitianDetailPage({ params }: { params: Promise
                                         <p className="text-xs font-bold text-zinc-400 uppercase tracking-wider mb-2">Anggota Peneliti</p>
                                         <div className="space-y-1">
                                             {data.anggota.map(anggota => (
-                                                <Link key={anggota.id} href={`/dosen-publik/${anggota.userId}`} className="flex items-center gap-3 p-2 -mx-2 rounded-lg hover:bg-zinc-50 transition-colors group">
+                                                <Link key={anggota.id} href={`/${currentslug}/dosen-publik/${anggota.userId}`} className="flex items-center gap-3 p-2 -mx-2 rounded-lg hover:bg-zinc-50 transition-colors group">
                                                     <div className="h-8 w-8 bg-zinc-100 text-zinc-500 rounded-full flex items-center justify-center shrink-0">
                                                         <Users className="h-4 w-4" />
                                                     </div>

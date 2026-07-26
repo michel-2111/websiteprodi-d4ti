@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { notFound } from "next/navigation";
 import { Users, BookOpen, LinkIcon, Briefcase } from "lucide-react";
 import Link from "next/link";
 import ScrollAnimate from "@/src/components/ScrollAnimate";
@@ -15,10 +16,27 @@ function formatJabatan(jabatan: string | null) {
         .join(' ');
 }
 
-export default async function DosenPublikPage() {
+export default async function DosenPublikPage({
+    params
+}: {
+    params: Promise<{ prodi: string }>
+}) {
+    // 1. Tangkap slug dari parameter URL secara asinkron
+    const resolvedParams = await params;
+    const { prodi: slug } = resolvedParams;
+
+    // 2. Ambil data prodi aktif berdasarkan slug
+    const prodiAktif = await prisma.prodi.findUnique({
+        where: { slug }
+    });
+
+    if (!prodiAktif) return notFound();
+
+    // 3. Ambil daftar dosen HANYA untuk prodi aktif ini
     const dosenList = await prisma.user.findMany({
         where: {
             role: "DOSEN",
+            prodiId: prodiAktif.id, // <-- Filter Multi-Tenancy
             dosenProfile: { isNot: null }
         },
         include: {
@@ -54,7 +72,8 @@ export default async function DosenPublikPage() {
                     </div>
                     <h1 className="text-4xl font-bold tracking-tight text-white mb-4">Direktori Pengajar</h1>
                     <p className="text-lg text-blue-200/70">
-                        Mengenal lebih dekat para pakar, praktisi, dan akademisi di balik Program Studi D4 Teknik Informatika.
+                        {/* 4. Teks deskripsi dinamis sesuai nama prodi */}
+                        Mengenal lebih dekat para pakar, praktisi, dan akademisi di balik {prodiAktif.nama}.
                     </p>
                 </div>
                 <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" className="w-full h-10 md:h-14">
@@ -66,7 +85,7 @@ export default async function DosenPublikPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     {dosenList.map((dosen, index) => {
                         const profil = dosen.dosenProfile!;
-                            const totalKarya = profil._count.publikasi + 
+                        const totalKarya = profil._count.publikasi + 
                                             profil._count.penelitianKetua + profil._count.penelitianAnggota + 
                                             profil._count.pengabdianKetua + profil._count.pengabdianAnggota +
                                             profil._count.bukuAjarKetua + profil._count.bukuAjarAnggota +
@@ -74,7 +93,8 @@ export default async function DosenPublikPage() {
 
                         return (
                             <ScrollAnimate key={dosen.id} delay={index < 8 ? index * 80 : 0}>
-                                <Link href={`/dosen-publik/${dosen.id}`} className="block">
+                                {/* 5. Tambahkan prefiks slug prodi pada URL detail dosen */}
+                                <Link href={`/${slug}/dosen-publik/${dosen.id}`} className="block">
                                     <div className="bg-white rounded-2xl border border-zinc-200/80 overflow-hidden hover:shadow-xl transition-all duration-300 group card-hover cursor-pointer h-full flex flex-col">
                                         <div className="aspect-square bg-zinc-100 relative overflow-hidden">
                                             {profil.fotoUrl ? (
@@ -89,7 +109,7 @@ export default async function DosenPublikPage() {
                                                     <span className="text-sm font-medium">Belum ada foto</span>
                                                 </div>
                                             )}
-                                            s
+                                            
                                             {profil.jabatanFungsional && (
                                                 <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-sm px-2.5 py-1 rounded-md text-xs font-bold text-zinc-800 shadow flex items-center">
                                                     <Briefcase className="h-3 w-3 mr-1.5 text-blue-600" />
@@ -137,7 +157,7 @@ export default async function DosenPublikPage() {
 
                 {dosenList.length === 0 && (
                     <div className="text-center py-24 text-zinc-500 bg-white rounded-2xl border border-dashed">
-                        Belum ada data dosen yang dipublikasikan.
+                        Belum ada data dosen yang dipublikasikan untuk program studi ini.
                     </div>
                 )}
             </div>

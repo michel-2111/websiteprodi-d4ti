@@ -6,18 +6,24 @@ import { MapPin, Phone, Mail, Globe, Facebook, Instagram, Youtube } from "lucide
 
 export default function Footer() {
     const pathname = usePathname();
+    
+    // 1. Ekstrak slug prodi dari URL
+    const pathSegments = pathname.split("/").filter(Boolean);
+    const currentSlug = pathSegments[0] || "";
+    const isPortal = pathname === "/";
+
     const isDashboard =
-        pathname.startsWith("/admin") ||
-        pathname === "/dosen" ||
-        pathname.startsWith("/dosen/") ||
-        pathname.startsWith("/gkm") ||
-        pathname === "/login";
+        currentSlug === "admin" ||
+        currentSlug === "dosen" ||
+        currentSlug === "gkm" ||
+        currentSlug === "login";
 
     if (isDashboard) {
         return null;
     }
 
     const currentYear = new Date().getFullYear();
+    const baseUrl = isPortal ? "" : `/${currentSlug}`;
 
     return (
         <footer className="bg-zinc-950 text-zinc-300 py-16 border-t border-zinc-900 mt-auto">
@@ -30,12 +36,15 @@ export default function Footer() {
                                 <img src="/logo.png" alt="TI logo" className="h-full w-full object-contain" />
                             </div>
                             <div>
-                                <h3 className="text-white font-bold text-xl leading-tight tracking-tight">D4 Teknik Informatika</h3>
+                                {/* 2. Buat teks judul footer sedikit lebih general atau mengikuti konteks */}
+                                <h3 className="text-white font-bold text-xl leading-tight tracking-tight">
+                                    {isPortal ? "Portal Akademik" : "Program Studi"}
+                                </h3>
                                 <p className="text-sm text-zinc-400 font-medium">Politeknik Negeri Manado</p>
                             </div>
                         </div>
                         <p className="text-sm leading-relaxed text-zinc-400 max-w-sm">
-                            Menghasilkan lulusan Sarjana Terapan yang unggul, inovatif, dan kompeten di bidang rekayasa perangkat lunak, sistem cerdas, dan jaringan komputer untuk memenuhi tuntutan industri global.
+                            Menghasilkan lulusan yang unggul, inovatif, dan kompeten di bidang rekayasa teknologi dan sistem informasi untuk memenuhi tuntutan industri global.
                         </p>
                         <div className="flex space-x-3 pt-2">
                             <a href="#" className="h-10 w-10 rounded-full bg-zinc-800/80 flex items-center justify-center text-zinc-400 hover:bg-blue-600 hover:text-white transition-all social-glow">
@@ -53,12 +62,17 @@ export default function Footer() {
                     <div className="md:col-span-3">
                         <h3 className="text-white font-bold mb-6 uppercase tracking-wider text-sm">Tautan Publik</h3>
                         <ul className="space-y-3">
-                            <li><Link href="/" className="text-sm text-zinc-400 hover:text-blue-400 transition-colors flex items-center gap-2"><span className="h-1.5 w-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></span> Beranda Utama</Link></li>
-                            <li><Link href="/visi-misi" className="text-sm text-zinc-400 hover:text-blue-400 transition-colors flex items-center gap-2"><span className="h-1.5 w-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></span> Visi & Misi</Link></li>
-                            <li><Link href="/dosen-publik" className="text-sm text-zinc-400 hover:text-blue-400 transition-colors flex items-center gap-2"><span className="h-1.5 w-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></span> Direktori Pengajar</Link></li>
-                            <li><Link href="/kurikulum-publik" className="text-sm text-zinc-400 hover:text-blue-400 transition-colors flex items-center gap-2"><span className="h-1.5 w-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></span> Struktur Kurikulum</Link></li>
-                            <li><Link href="/galeri" className="text-sm text-zinc-400 hover:text-blue-400 transition-colors flex items-center gap-2"><span className="h-1.5 w-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></span> Fasilitas & Tri Dharma</Link></li>
-                            {/* <li><Link href="/laporan-mutu" className="text-sm text-zinc-400 hover:text-blue-400 transition-colors flex items-center gap-2"><span className="h-1.5 w-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></span> Penjaminan Mutu (GKM)</Link></li> */}
+                            <li><Link href={isPortal ? "/" : baseUrl} className="text-sm text-zinc-400 hover:text-blue-400 transition-colors flex items-center gap-2"><span className="h-1.5 w-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></span> Beranda Utama</Link></li>
+                            
+                            {/* Sembunyikan tautan spesifik prodi jika berada di Portal Utama */}
+                            {!isPortal && (
+                                <>
+                                    <li><Link href={`${baseUrl}/visi-misi`} className="text-sm text-zinc-400 hover:text-blue-400 transition-colors flex items-center gap-2"><span className="h-1.5 w-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></span> Visi & Misi</Link></li>
+                                    <li><Link href={`${baseUrl}/dosen-publik`} className="text-sm text-zinc-400 hover:text-blue-400 transition-colors flex items-center gap-2"><span className="h-1.5 w-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></span> Direktori Pengajar</Link></li>
+                                    <li><Link href={`${baseUrl}/kurikulum-publik`} className="text-sm text-zinc-400 hover:text-blue-400 transition-colors flex items-center gap-2"><span className="h-1.5 w-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></span> Struktur Kurikulum</Link></li>
+                                    <li><Link href={`${baseUrl}/galeri`} className="text-sm text-zinc-400 hover:text-blue-400 transition-colors flex items-center gap-2"><span className="h-1.5 w-1.5 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></span> Fasilitas & Tri Dharma</Link></li>
+                                </>
+                            )}
                         </ul>
                     </div>
 
@@ -106,7 +120,7 @@ export default function Footer() {
                 </div>
 
                 <div className="border-t border-zinc-800/80 mt-16 pt-8 flex flex-col md:flex-row items-center justify-between text-sm text-zinc-500">
-                    <p>&copy; {currentYear} Program Studi D4 Teknik Informatika, Politeknik Negeri Manado.</p>
+                    <p>&copy; {currentYear} Politeknik Negeri Manado.</p>
                     <div className="flex items-center gap-4 mt-4 md:mt-0">
                         <Link href="/login" className="hover:text-blue-400 transition-colors">Portal Login (Internal)</Link>
                         <span>•</span>

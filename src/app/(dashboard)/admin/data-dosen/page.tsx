@@ -1,12 +1,25 @@
 import { PrismaClient } from "@prisma/client";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Users, CheckCircle2, XCircle } from "lucide-react";
+import { getActiveProdiId } from "@/src/app/actions/prodi-context"; // 1. Import pembaca cookie prodi
 
 const prisma = new PrismaClient();
 
 export default async function AdminDataDosenPage() {
+    // 2. Ambil ID prodi yang sedang aktif di-manage oleh Admin
+    const activeProdiId = await getActiveProdiId();
+    
+    // Ambil nama prodi untuk dinamisasi judul
+    const prodiAktif = activeProdiId 
+        ? await prisma.prodi.findUnique({ where: { id: activeProdiId } })
+        : null;
+
+    // 3. Tambahkan filter prodiId pada kueri Prisma bawaan Anda
     const dosenList = await prisma.user.findMany({
-        where: { role: "DOSEN" },
+        where: { 
+            role: "DOSEN",
+            prodiId: activeProdiId // <-- Filter tambahan agar tidak bercampur dengan dosen prodi lain
+        },
         include: {
             dosenProfile: {
                 include: {
@@ -38,7 +51,10 @@ export default async function AdminDataDosenPage() {
                 </div>
                 <div>
                     <h2 className="text-2xl font-bold tracking-tight">Data Dosen Prodi</h2>
-                    <p className="text-zinc-500">Pantau daftar seluruh dosen dan kelengkapan profil mereka.</p>
+                    {/* 4. Deskripsi berubah sesuai prodi yang dipilih */}
+                    <p className="text-zinc-500">
+                        Pantau daftar seluruh dosen dan kelengkapan profil di {prodiAktif ? prodiAktif.nama : "Program Studi"}.
+                    </p>
                 </div>
             </div>
 
@@ -102,7 +118,7 @@ export default async function AdminDataDosenPage() {
                         {dosenList.length === 0 && (
                             <TableRow>
                                 <TableCell colSpan={5} className="text-center text-zinc-500 py-12">
-                                    Belum ada pengguna dengan akses Dosen yang terdaftar.
+                                    Belum ada pengguna dengan akses Dosen yang terdaftar di prodi ini.
                                 </TableCell>
                             </TableRow>
                         )}

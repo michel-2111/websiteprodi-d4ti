@@ -8,9 +8,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Plus, Edit, Trash2, X, AlertTriangle, Download, FileText } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Plus, Edit, Trash2, X, AlertTriangle, Download, FileText, Globe, Layers } from "lucide-react";
 
-export default function DokumenClient({ initialData }: { initialData: any[] }) {
+// Menerima prop tambahan namaProdi untuk deskripsi dinamis
+export default function DokumenClient({ initialData, namaProdi }: { initialData: any[]; namaProdi: string }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleteOpen, setIsDeleteOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -74,7 +76,8 @@ export default function DokumenClient({ initialData }: { initialData: any[] }) {
                     </div>
                     <div>
                         <h2 className="text-2xl font-bold tracking-tight">Pusat Dokumen</h2>
-                        <p className="text-zinc-500">Kelola dokumen internal, template, dan pedoman untuk Dosen.</p>
+                        {/* Judul deskripsi dinamis */}
+                        <p className="text-zinc-500">Kelola dokumen internal, template, dan pedoman untuk {namaProdi}.</p>
                     </div>
                 </div>
                 
@@ -87,7 +90,8 @@ export default function DokumenClient({ initialData }: { initialData: any[] }) {
                 <Table>
                     <TableHeader className="bg-zinc-50">
                         <TableRow>
-                            <TableHead className="w-1/3">Nama Dokumen</TableHead>
+                            <TableHead className="w-1/4">Nama Dokumen</TableHead>
+                            <TableHead className="w-32">Cakupan</TableHead>
                             <TableHead>Keterangan</TableHead>
                             <TableHead className="w-32">Tanggal</TableHead>
                             <TableHead className="text-right w-40">Aksi</TableHead>
@@ -97,6 +101,18 @@ export default function DokumenClient({ initialData }: { initialData: any[] }) {
                         {initialData.map((doc) => (
                             <TableRow key={doc.id} className="hover:bg-zinc-50/50">
                                 <TableCell className="font-semibold text-zinc-900">{doc.nama}</TableCell>
+                                {/* Kolom Tambahan: Penanda Cakupan Dokumen Multi-Tenant */}
+                                <TableCell>
+                                    {doc.prodiId === null ? (
+                                        <Badge variant="secondary" className="bg-amber-50 text-amber-700 hover:bg-amber-50 border-amber-200 gap-1 font-medium">
+                                            <Globe className="h-3 w-3" /> Global Jurusan
+                                        </Badge>
+                                    ) : (
+                                        <Badge variant="outline" className="text-indigo-700 bg-indigo-50/40 border-indigo-200 gap-1 font-medium">
+                                            <Layers className="h-3 w-3" /> Prodi
+                                        </Badge>
+                                    )}
+                                </TableCell>
                                 <TableCell className="text-zinc-600 text-sm whitespace-pre-wrap">{doc.keterangan || "-"}</TableCell>
                                 <TableCell className="text-zinc-500 text-sm">
                                     {new Date(doc.createdAt).toLocaleDateString('id-ID')}
@@ -118,8 +134,8 @@ export default function DokumenClient({ initialData }: { initialData: any[] }) {
                         ))}
                         {initialData.length === 0 && (
                             <TableRow>
-                                <TableCell colSpan={4} className="text-center text-zinc-500 py-12">
-                                    Belum ada dokumen. Klik "Tambah Dokumen" untuk mengunggah.
+                                <TableCell colSpan={5} className="text-center text-zinc-500 py-12">
+                                    Belum ada dokumen untuk prodi ini. Klik "Tambah Dokumen" untuk mengunggah.
                                 </TableCell>
                             </TableRow>
                         )}
@@ -162,6 +178,7 @@ export default function DokumenClient({ initialData }: { initialData: any[] }) {
                 </div>
             )}
 
+            {/* Modal Delete */}
             {isDeleteOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-900/60 backdrop-blur-sm p-4">
                     <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden animate-in fade-in zoom-in-95 duration-200">
@@ -170,7 +187,7 @@ export default function DokumenClient({ initialData }: { initialData: any[] }) {
                                 <AlertTriangle className="h-8 w-8" />
                             </div>
                             <h3 className="font-bold text-xl text-zinc-900 mb-2">Hapus Dokumen?</h3>
-                            <p className="text-zinc-500 text-sm mb-6 leading-relaxed whitespace-normal break-words">
+                            <p className="text-zinc-500 text-sm mb-6 leading-relaxed whitespace-normal wrap-break-word">
                                 Yakin ingin menghapus <span className="font-bold text-zinc-900">{selectedDoc?.nama}</span>? Dokumen ini tidak akan bisa diakses lagi oleh Dosen.
                             </p>
                             <div className="grid grid-cols-2 gap-3">

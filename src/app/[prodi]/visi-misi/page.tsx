@@ -1,32 +1,56 @@
 import { PrismaClient } from "@prisma/client";
+import { notFound } from "next/navigation";
 import { Target } from "lucide-react";
 import ScrollAnimate from "@/src/components/ScrollAnimate";
 
 const prisma = new PrismaClient();
 export const revalidate = 60;
 
-// Mapping Enum ke Judul dan ID untuk Anchor Scroll
-const sectionConfig = [
+// 1. Ubah konfigurasi section agar judulnya bisa disisipkan nama prodi secara dinamis
+const getSectionConfig = (namaProdi: string) => [
     { type: "VISI_POLIMDO", title: "Visi Polimdo", id: "visi-polimdo" },
     { type: "MISI_POLIMDO", title: "Misi Polimdo", id: "misi-polimdo" },
     { type: "TUJUAN_POLIMDO", title: "Tujuan Polimdo", id: "tujuan-polimdo" },
-    { type: "VISI_PRODI", title: "Visi Program Studi D-IV Informatika", id: "visi-prodi" },
-    { type: "MISI_PRODI", title: "Misi Program Studi D-IV Informatika", id: "misi-prodi" },
-    { type: "TUJUAN_PRODI", title: "Tujuan Program Studi D-IV Informatika", id: "tujuan-prodi" },
-    { type: "VISI_KEILMUAN", title: "Visi Keilmuan Program Studi", id: "visi-keilmuan" },
+    { type: "VISI_PRODI", title: `Visi ${namaProdi}`, id: "visi-prodi" },
+    { type: "MISI_PRODI", title: `Misi ${namaProdi}`, id: "misi-prodi" },
+    { type: "TUJUAN_PRODI", title: `Tujuan ${namaProdi}`, id: "tujuan-prodi" },
+    { type: "VISI_KEILMUAN", title: `Visi Keilmuan ${namaProdi}`, id: "visi-keilmuan" },
 ];
 
-export default async function VisiMisiPublikPage() {
-    const data = await prisma.visiMisi.findMany();
+// 2. Terima properti params sebagai Promise untuk standarisasi Next.js terbaru
+export default async function VisiMisiPublikPage({ 
+    params 
+}: { 
+    params: Promise<{ prodi: string }> 
+}) {
+    // Await params untuk mendapatkan string slug murni
+    const resolvedParams = await params;
+    const { prodi: slug } = resolvedParams;
+
+    // Cari data prodi berdasarkan slug URL
+    const prodiAktif = await prisma.prodi.findUnique({
+        where: { slug }
+    });
+
+    // Jika prodi tidak terdaftar, arahkan langsung ke halaman 404
+    if (!prodiAktif) return notFound();
+
+    // Ambil data Visi Misi yang HANYA dimiliki oleh prodi aktif ini
+    const data = await prisma.visiMisi.findMany({
+        where: { prodiId: prodiAktif.id }
+    });
 
     const dataMap: Record<string, string> = {};
     data.forEach(item => {
         dataMap[item.tipe] = item.konten;
     });
 
+    // Generate konfigurasi section dinamis berdasarkan nama prodi aktif
+    const sectionConfig = getSectionConfig(prodiAktif.nama);
+
     return (
         <div className="min-h-screen bg-zinc-50 pb-24">
-            <div className="relative bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 overflow-hidden">
+            <div className="relative bg-linear-to-br from-slate-900 via-blue-950 to-indigo-950 overflow-hidden">
                 <div className="absolute inset-0 dot-pattern opacity-30" />
                 <div className="relative container mx-auto px-4 py-20 text-center max-w-3xl">
                     <div className="mx-auto h-16 w-16 bg-white/10 backdrop-blur-sm border border-white/20 text-white rounded-2xl flex items-center justify-center mb-6">
@@ -34,7 +58,8 @@ export default async function VisiMisiPublikPage() {
                     </div>
                     <h1 className="text-4xl font-bold tracking-tight text-white mb-4">Visi, Misi & Tujuan</h1>
                     <p className="text-lg text-blue-200/70">
-                        Arah langkah dan pedoman fundamental Politeknik Negeri Manado serta Program Studi Sarjana Terapan Teknik Informatika.
+                        {/* 3. Teks deskripsi dinamis sesuai nama prodi */}
+                        Arah langkah dan pedoman fundamental Politeknik Negeri Manado serta {prodiAktif.nama}.
                     </p>
                 </div>
                 <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" className="w-full h-10 md:h-14">
@@ -44,13 +69,12 @@ export default async function VisiMisiPublikPage() {
 
             {/* Konten Utama */}
             <div className="container mx-auto px-4 mt-12 max-w-4xl space-y-16">
-                {sectionConfig.map((section, index) => {
+                {sectionConfig.map((section) => {
                     const konten = dataMap[section.type];
-                    if (!konten) return null; // Sembunyikan jika Admin belum mengisi
+                    if (!konten) return null; // Sembunyikan jika Admin belum mengisi konten prodi ini
 
                     return (
                         <ScrollAnimate key={section.id} delay={100}>
-                            {/* Scroll target padding offset */}
                             <div id={section.id} className="scroll-mt-28">
                                 <div className="bg-white rounded-3xl p-8 md:p-10 border border-zinc-100 shadow-sm relative overflow-hidden group">
                                     <div className="absolute top-0 left-0 w-2 h-full bg-blue-600 rounded-l-3xl opacity-80 group-hover:opacity-100 transition-opacity" />
@@ -66,7 +90,7 @@ export default async function VisiMisiPublikPage() {
 
                 {Object.keys(dataMap).length === 0 && (
                     <div className="text-center py-20 text-zinc-500 bg-white rounded-2xl border border-dashed">
-                        Data Visi dan Misi sedang dalam pembaruan.
+                        Belum ada data Visi dan Misi yang dikonfigurasi untuk prodi ini.
                     </div>
                 )}
             </div>

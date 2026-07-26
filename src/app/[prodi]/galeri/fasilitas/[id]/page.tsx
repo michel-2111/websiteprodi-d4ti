@@ -7,16 +7,37 @@ import { Button } from "@/components/ui/button";
 const prisma = new PrismaClient();
 export const revalidate = 60;
 
-export default async function FasilitasDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params;
-  const fasilitas = await prisma.fasilitas.findUnique({ where: { id } });
+// 1. Sesuaikan parameter agar menangkap properti prodi dan id secara asinkron
+export default async function FasilitasDetailPage({ 
+    params 
+}: { 
+    params: Promise<{ prodi: string; id: string }> 
+}) {
+  const resolvedParams = await params;
+  const { prodi: slug, id } = resolvedParams;
+
+  // 2. Validasi program studi aktif dari URL
+  const prodiAktif = await prisma.prodi.findUnique({
+    where: { slug }
+  });
+
+  if (!prodiAktif) return notFound();
+
+  // 3. Ambil data fasilitas yang terikat kuat ke prodiAktif.id
+  const fasilitas = await prisma.fasilitas.findFirst({ 
+    where: { 
+      id: id,
+      prodiId: prodiAktif.id // Filter isolasi Multi-Tenancy
+    } 
+  });
 
   if (!fasilitas) notFound();
 
   return (
     <div className="min-h-screen bg-zinc-50 pb-24 pt-8">
       <div className="container mx-auto px-4 max-w-5xl">
-        <Link href="/galeri">
+        {/* 4. Sesuaikan link navigasi kembali dengan slug prodi */}
+        <Link href={`/${slug}/galeri`}>
           <Button variant="ghost" size="sm" className="mb-6 -ml-3 text-zinc-500 hover:text-zinc-900">
             <ArrowLeft className="h-4 w-4 mr-2" /> Kembali ke Galeri
           </Button>
