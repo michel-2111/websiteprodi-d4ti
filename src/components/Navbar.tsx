@@ -36,15 +36,20 @@ export default function Navbar() {
     }, [pathname]);
 
     if (isDashboard) return null;
-
-    // 2. Buat Base URL dinamis berdasarkan slug
     const baseUrl = isPortal ? "" : `/${currentSlug}`;
+
+    const isEligibleAlihJenjang = 
+        currentSlug.includes("d4-ti") || 
+        currentSlug.includes("d4-teknik-informatika") ||
+        currentSlug.includes("d4-teknik-listrik") ||
+        currentSlug.includes("d4-tl");
 
     const navLinks = [
         { name: "Beranda", href: isPortal ? "/" : baseUrl },
         { name: "Profil Dosen", href: `${baseUrl}/dosen-publik` },
         { name: "Kurikulum", href: `${baseUrl}/kurikulum-publik` },
         { name: "Fasilitas & Tri Dharma", href: `${baseUrl}/galeri` },
+        ...(isEligibleAlihJenjang ? [{ name: "Alih Jenjang", href: `${baseUrl}/alih-jenjang` }] : []),
     ];
 
     const visiMisiLinks = [
@@ -59,7 +64,6 @@ export default function Navbar() {
 
     const handleScrollTo = (id: string) => {
         setMobileOpen(false);
-        // 3. Arahkan scroll dengan URL yang sudah diinjeksi slug
         if (pathname !== `${baseUrl}/visi-misi`) {
             router.push(`${baseUrl}/visi-misi#${id}`);
         } else {
@@ -114,6 +118,8 @@ export default function Navbar() {
             ? "bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-950 backdrop-blur-xl shadow-lg shadow-blue-950/30"
             : "bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-950";
     };
+
+    
     
     return (
         <>

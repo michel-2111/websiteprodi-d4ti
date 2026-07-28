@@ -26,6 +26,7 @@ const menus = {
         { name: "Dokumen", href: "/admin/dokumen", icon: FileText },
         { name: "Visi Misi", href: "/admin/visi-misi", icon: Target },
         { name: "Pengaturan", href: "/admin/pengaturan", icon: Cog },
+        { name: "Alih Jenjang", href: "/admin/alih-jenjang", icon: Users },
     ],
     DOSEN: [
         { name: "Profil Saya", href: "/dosen", icon: UserCircle },

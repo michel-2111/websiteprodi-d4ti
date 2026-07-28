@@ -287,4 +287,22 @@ model Prodi {
   statistikMahasiswa StatistikMahasiswa[]
   visiMisi           VisiMisi[]
   dokumen            Dokumen[]
+  alihJenjang        AlihJenjang[]
+}
+
+model AlihJenjang {
+  id          String   @id @default(cuid())
+  nama        String
+  alamat      String
+  telepon     String
+  ijazahUrl   String
+  ktpUrl      String
+  cvUrl       String
+  pasfotoUrl  String
+  
+  prodiId     String
+  prodi       Prodi    @relation(fields: [prodiId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
