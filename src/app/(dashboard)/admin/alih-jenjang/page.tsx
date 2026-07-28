@@ -1,7 +1,12 @@
 import { PrismaClient } from "@prisma/client";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getActiveProdiId } from "@/src/app/actions/prodi-context";
-import { FileText, ExternalLink } from "lucide-react";
+import { FileText } from "lucide-react";
+
+// 1. Import komponen klien yang baru saja dibuat
+import { ExportCsvButton, DeleteButton } from "./ClientButtons"; 
+
+export const dynamic = "force-dynamic"; 
 
 const prisma = new PrismaClient();
 
@@ -16,9 +21,17 @@ export default async function AdminAlihJenjangPage() {
 
     return (
         <div className="space-y-6">
-            <div>
-                <h2 className="text-2xl font-bold tracking-tight">Daftar Pendaftar Alih Jenjang</h2>
-                <p className="text-zinc-500">Kelola dan tinjau berkas pendaftaran calon mahasiswa alih jenjang.</p>
+            {/* 2. Tambahkan flex-between agar tombol Export CSV sejajar dengan Judul */}
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 className="text-2xl font-bold tracking-tight">Daftar Pendaftar Alih Jenjang</h2>
+                    <p className="text-zinc-500">Kelola dan tinjau berkas pendaftaran calon mahasiswa alih jenjang.</p>
+                </div>
+                
+                {/* Tampilkan tombol export HANYA jika ada minimal 1 peserta */}
+                {pesertaList.length > 0 && (
+                    <ExportCsvButton data={pesertaList} />
+                )}
             </div>
 
             <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
@@ -29,6 +42,8 @@ export default async function AdminAlihJenjangPage() {
                             <TableHead>Kontak & Alamat</TableHead>
                             <TableHead>Dokumen Terlampir</TableHead>
                             <TableHead>Tanggal Daftar</TableHead>
+                            {/* Tambahan Header untuk Aksi */}
+                            <TableHead className="w-[80px] text-center">Aksi</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -59,11 +74,16 @@ export default async function AdminAlihJenjangPage() {
                                     <TableCell className="text-xs text-zinc-500">
                                         {new Date(item.createdAt).toLocaleDateString("id-ID")}
                                     </TableCell>
+                                    
+                                    {/* 3. Suntikkan Tombol Delete Individual di sini */}
+                                    <TableCell className="text-center">
+                                        <DeleteButton id={item.id} />
+                                    </TableCell>
                                 </TableRow>
                             ))
                         ) : (
                             <TableRow>
-                                <TableCell colSpan={4} className="text-center py-8 text-zinc-500">
+                                <TableCell colSpan={5} className="text-center py-8 text-zinc-500">
                                     Belum ada data pendaftar alih jenjang.
                                 </TableCell>
                             </TableRow>

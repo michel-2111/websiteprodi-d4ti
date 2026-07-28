@@ -72,3 +72,19 @@ export async function submitAlihJenjang(formData: FormData) {
         return { success: false, error: "Terjadi kesalahan internal server." };
     }
 }
+// Tambahkan di bagian paling bawah file src/app/actions/alih-jenjang.ts
+
+export async function deleteAlihJenjang(id: string) {
+    try {
+        await prisma.alihJenjang.delete({
+            where: { id }
+        });
+        
+        // Refresh halaman admin agar baris yang dihapus langsung hilang
+        revalidatePath("/admin/alih-jenjang");
+        return { success: true };
+    } catch (error) {
+        console.error("Gagal menghapus data alih jenjang:", error);
+        return { success: false, error: "Gagal menghapus data dari database." };
+    }
+}
