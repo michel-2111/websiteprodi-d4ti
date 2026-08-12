@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 import VisitorTracker from "../components/VisitorTracker";
 
 export const metadata = {
-    title: "Sistem Informasi Prodi D4 TI",
+    title: "Sistem Informasi Jurusan Teknik Elektro - Politeknik Negeri Manado",
     description: "Politeknik Negeri Manado",
 };
 
