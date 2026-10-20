@@ -80,6 +80,9 @@ export default async function HomePage({ params }: { params: Promise<{ prodi: st
         console.error("Gagal memuat berita teknologi:", error);
     }
 
+    const isD4 = prodiAktif.nama.startsWith("D4");
+    const namaProdi = prodiAktif.nama.replace(/^D[34]\s*/, "").trim();
+
     return (
         <div className="min-h-screen bg-white">
             <section className="relative overflow-hidden pt-28 pb-36">
@@ -103,13 +106,14 @@ export default async function HomePage({ params }: { params: Promise<{ prodi: st
 
                     {/* 7. Ubah nama Program Studi menjadi dinamis sesuai database */}
                     <h1 className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-white mb-6 animate-fade-in-up delay-100" style={{ animationFillMode: 'both' }}>
-                        Program Studi Sarjana Terapan <br className="hidden md:block" />
+                        {isD4 ? "Program Studi Sarjana Terapan" : "Program Studi Diploma Tiga"}
+                            <br className="hidden md:block" />
                         <span className="bg-linear-to-r from-blue-400 via-cyan-300 to-blue-400 bg-clip-text text-transparent animate-gradient">
-                            {prodiAktif.nama.replace("Sarjana Terapan", "").replace("D4", "").trim()}
+                            {namaProdi}
                         </span>
                     </h1>
                     <p className="text-lg md:text-xl text-blue-200/80 mb-10 max-w-2xl mx-auto animate-fade-in-up delay-200" style={{ animationFillMode: 'both' }}>
-                        Menghasilkan lulusan unggul, inovatif, dan siap kerja di lingkup kompetensi {prodiAktif.nama} Politeknik Negeri Manado.
+                        Menghasilkan lulusan unggul, inovatif, dan siap kerja di lingkup kompetensi {namaProdi} Politeknik Negeri Manado.
                     </p>
                 </div>
 
@@ -129,7 +133,7 @@ export default async function HomePage({ params }: { params: Promise<{ prodi: st
                             </div>
                             <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-zinc-900 mb-4">Dashboard & Statistik</h2>
                             {/* 8. Dinamisasi sub-deskripsi prodi */}
-                            <p className="text-zinc-500">Informasi akademik, perkembangan mahasiswa, dan jadwal perkuliahan {prodiAktif.nama}.</p>
+                            <p className="text-zinc-500">Informasi akademik, perkembangan mahasiswa, dan jadwal perkuliahan {namaProdi}.</p>
                         </div>
                     </ScrollAnimate>
 
